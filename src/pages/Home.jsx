@@ -1,0 +1,95 @@
+import React from 'react';
+import { Laptop, Zap, CheckCircle } from 'lucide-react';
+import ProductCard from '../components/Shop/ProductCard';
+import { useProducts } from '../context/ProductsContext';
+
+export default function Home() {
+    const { products } = useProducts();
+
+    return (
+        <div className="home">
+            {/* Hero Section */}
+            <section className="hero">
+                <div className="container">
+                    <div className="hero-content">
+                        <h1 className="hero-title">
+                            Soluciones Informáticas Avanzadas
+                        </h1>
+                        <p className="hero-subtitle">
+                            Venta y Reparación de Equipos de Cómputo con Garantía y Eficiencia
+                        </p>
+                        <div className="hero-buttons">
+                            <a href="#laptops" className="btn btn-primary btn-lg">
+                                <Laptop size={24} />
+                                Explorar Laptops
+                            </a>
+                            <a href="/appointment" className="btn btn-outline btn-lg">
+                                Solicitar Reparación
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Section */}
+            <section className="features section">
+                <div className="container">
+                    <div className="features-grid">
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Laptop size={40} />
+                            </div>
+                            <h3>Laptops de Calidad</h3>
+                            <p>Equipos nuevos y reacondicionados con garantía certificada</p>
+                        </div>
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Zap size={40} />
+                            </div>
+                            <h3>Reparación Experta</h3>
+                            <p>Técnicos certificados para todo tipo de reparaciones</p>
+                        </div>
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <CheckCircle size={40} />
+                            </div>
+                            <h3>Licencias Originales</h3>
+                            <p>Software original con soporte y actualizaciones</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Products Section */}
+            <section id="laptops" className="products section">
+                <div className="container">
+                    <div className="section-header">
+                        <h2 className="section-title">Nuestras Laptops</h2>
+                        <p className="section-description">
+                            Encuentra el equipo perfecto para tus necesidades
+                        </p>
+                    </div>
+                    <div className="products-grid">
+                        {products.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="cta section">
+                <div className="container">
+                    <div className="cta-content">
+                        <h2>¿No encuentras lo que buscas?</h2>
+                        <p>Contáctanos y te ayudaremos a encontrar el equipo ideal</p>
+                        <button onClick={() => window.open('https://wa.me/527713951347', '_blank')} className="btn btn-primary btn-lg">
+                            Contactar por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
+}
+
