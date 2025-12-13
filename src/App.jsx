@@ -1,19 +1,15 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// Cambia 'BrowserRouter' por 'HashRouter'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
-import { ProductsProvider } from './context/ProductsContext';
-import Navbar from './components/Layout/Navbar';
-import Footer from './components/Layout/Footer';
-import ShoppingCart from './components/Cart/ShoppingCart';
-import Home from './pages/Home';
-import Licenses from './pages/Licenses';
-import Appointment from './pages/Appointment';
-import './index.css';
+// ... resto de imports
 
 function App() {
   return (
     <ProductsProvider>
       <CartProvider>
+        {/* Usamos HashRouter aquí */}
         <Router>
           <div className="app">
             <Navbar />
