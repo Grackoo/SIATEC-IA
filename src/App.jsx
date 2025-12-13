@@ -1,15 +1,28 @@
-// src/App.jsx
 import React from 'react';
-// Cambia 'BrowserRouter' por 'HashRouter'
+// Usamos HashRouter para compatibilidad con GitHub Pages
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Importaciones de Contexto
 import { CartProvider } from './context/CartContext';
-// ... resto de imports
+import { ProductsProvider } from './context/ProductsContext'; // <-- Esta es la que te faltaba y causaba el error
+
+// Importaciones de Componentes de Diseño
+import Navbar from './components/Layout/Navbar';
+import Footer from './components/Layout/Footer';
+import ShoppingCart from './components/Cart/ShoppingCart';
+
+// Importaciones de Páginas
+import Home from './pages/Home';
+import Licenses from './pages/Licenses';
+import Appointment from './pages/Appointment';
+
+// Estilos globales
+import './index.css';
 
 function App() {
   return (
     <ProductsProvider>
       <CartProvider>
-        {/* Usamos HashRouter aquí */}
         <Router>
           <div className="app">
             <Navbar />
