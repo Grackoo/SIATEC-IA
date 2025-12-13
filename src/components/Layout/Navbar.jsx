@@ -24,7 +24,8 @@ export default function Navbar() {
         <div className="navbar-content">
           {/* Logo */}
           <Link to="/" className="navbar-brand">
-            <img src="/logo.png" alt="SIA TEC" className="navbar-logo" />
+            {/* Cambia "/logo.png" por "logo.png" o "./logo.png" */}
+            <img src="logo.png" alt="SIA TEC" className="navbar-logo" />
             <div className="navbar-brand-text">
               <span className="navbar-title">SIA TEC</span>
               <span className="navbar-subtitle">Soluciones Informáticas</span>
