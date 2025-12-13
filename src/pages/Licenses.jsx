@@ -1,5 +1,6 @@
 import React from 'react';
-import { Shield, Windows, Key } from 'lucide-react';
+// CORRECCIÓN: Cambiamos 'Windows' por 'AppWindow' (un icono genérico de ventana)
+import { Shield, AppWindow, Key } from 'lucide-react';
 import LicenseCard from '../components/Licenses/LicenseCard';
 import { licenseData } from '../data/initialProducts';
 
@@ -26,7 +27,8 @@ export default function Licenses() {
             <section className="licenses-section section">
                 <div className="container">
                     <div className="section-title-group">
-                        <Windows size={32} className="section-icon" />
+                        {/* CORRECCIÓN: Usamos el nuevo icono aquí */}
+                        <AppWindow size={32} className="section-icon" />
                         <div>
                             <h2>Microsoft Windows</h2>
                             <p>Sistemas operativos originales con licencia permanente</p>
@@ -76,4 +78,3 @@ export default function Licenses() {
         </div>
     );
 }
-
