@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Laptop, Zap, CheckCircle } from 'lucide-react';
 import ProductCard from '../components/Shop/ProductCard';
 import { useProducts } from '../context/ProductsContext';
@@ -12,7 +13,7 @@ export default function Home() {
             <section className="hero">
                 <div className="video-background">
                     <video autoPlay loop muted playsInline className="hero-video">
-                        <source src="/videos/hero-video.mp4" type="video/mp4" />
+                        <source src="videos/hero-video.mp4" type="video/mp4" />
                         Tu navegador no soporta videos HTML5.
                     </video>
                     <div className="hero-overlay"></div>
@@ -30,9 +31,9 @@ export default function Home() {
                                 <Laptop size={24} />
                                 Explorar Laptops
                             </a>
-                            <a href="/appointment" className="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-black">
+                            <Link to="/appointment" className="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-black">
                                 Solicitar Reparación
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
