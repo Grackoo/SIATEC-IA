@@ -10,8 +10,15 @@ export default function Home() {
         <div className="home">
             {/* Hero Section */}
             <section className="hero">
-                <div className="container">
-                    <div className="hero-content">
+                <div className="video-background">
+                    <video autoPlay loop muted playsInline className="hero-video">
+                        <source src="/videos/hero-video.mp4" type="video/mp4" />
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                    <div className="hero-overlay"></div>
+                </div>
+                <div className="container relative z-10">
+                    <div className="hero-content text-white">
                         <h1 className="hero-title">
                             Soluciones Informáticas Avanzadas
                         </h1>
@@ -23,7 +30,7 @@ export default function Home() {
                                 <Laptop size={24} />
                                 Explorar Laptops
                             </a>
-                            <a href="/appointment" className="btn btn-outline btn-lg">
+                            <a href="/appointment" className="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-black">
                                 Solicitar Reparación
                             </a>
                         </div>
