@@ -708,9 +708,12 @@
 /* === PAGE STYLES === */
 .home .hero {
     background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-darkest) 100%);
-    padding: var(--spacing-3xl) 0;
+    padding: 0;
     position: relative;
     overflow: hidden;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
 }
 
 .home .hero::before {
