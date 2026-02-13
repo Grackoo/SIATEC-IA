@@ -50,7 +50,7 @@ export default function Navbar() {
             {/* WhatsApp Support Button */}
             <button
               onClick={openCustomerSupport}
-              className="btn btn-icon whatsapp-btn"
+              className="btn btn-sm whatsapp-btn"
               title="Atención al Cliente"
             >
               <MessageCircle size={20} />

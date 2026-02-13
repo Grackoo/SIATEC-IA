@@ -100,14 +100,14 @@
 }
 
 .whatsapp-btn {
-    background: #25D366 !important;
-    color: white !important;
+    background: var(--primary-cyan) !important;
+    color: var(--bg-darkest) !important;
 }
 
 .whatsapp-btn:hover {
-    background: #20BA5A !important;
+    background: var(--primary-cyan-dark) !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
 
 .cart-btn {

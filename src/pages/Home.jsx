@@ -27,7 +27,7 @@ export default function Home() {
                             Venta y Reparación de Equipos de Cómputo con Garantía y Eficiencia
                         </p>
                         <div className="hero-buttons">
-                            <a href="#laptops" className="btn btn-primary btn-lg box-shadow-lg">
+                            <a href="#laptops" className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
                                 <Laptop size={24} />
                                 Explorar Laptops
                             </a>
