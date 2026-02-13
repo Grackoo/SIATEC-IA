@@ -15,6 +15,7 @@ import ShoppingCart from './components/Cart/ShoppingCart';
 import Home from './pages/Home';
 import Licenses from './pages/Licenses';
 import Appointment from './pages/Appointment';
+import Streaming from './pages/Streaming';
 
 // Estilos globales
 import './index.css';
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/licenses" element={<Licenses />} />
                 <Route path="/appointment" element={<Appointment />} />
+                <Route path="/streaming" element={<Streaming />} />
               </Routes>
             </main>
             <Footer />

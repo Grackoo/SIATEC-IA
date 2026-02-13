@@ -638,3 +638,156 @@ img {
 .z-10 {
   z-index: 10;
 }
+
+/* === STREAMING PAGE === */
+.streaming-header {
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.streaming-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: var(--spacing-sm);
+}
+
+.streaming-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.service-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-header {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+/* Service Colors */
+.service-netflix {
+  background-color: #000000;
+  color: #E50914;
+}
+
+.service-vix {
+  background-color: #FF5A00;
+  color: white;
+}
+
+.service-paramount {
+  background-color: #0064FF;
+  color: white;
+}
+
+.service-hbo {
+  background-color: #5D2E86;
+  color: white;
+}
+
+.service-spotify {
+  background-color: #1DB954;
+  color: white;
+}
+
+.service-disney {
+  background-color: #001E60;
+  color: white;
+}
+
+.service-icon-text {
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.service-body {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.service-title {
+  color: var(--gray-900);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.service-description {
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-lg);
+  flex-grow: 1;
+}
+
+.btn-whatsapp {
+  background-color: #25D366;
+  color: white;
+  width: 100%;
+  justify-content: center;
+  font-weight: 600;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-whatsapp:hover {
+  background-color: #128C7E;
+  color: white;
+}
+
+.guarantee-section {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  margin-top: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.guarantee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-xl);
+  text-align: center;
+}
+
+.guarantee-item {
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: var(--gray-100);
+}
+
+.guarantee-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--spacing-md);
+  color: var(--primary-cyan-dark);
+}
+
+.guarantee-title {
+  color: var(--gray-900);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.guarantee-text {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}

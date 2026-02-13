@@ -20,7 +20,7 @@ export function openCustomerSupport() {
  */
 export function sendOrderToWhatsApp(cartItems, total) {
   let message = '🛒 *Nuevo Pedido - SIA TEC*\n\n';
-  
+
   cartItems.forEach((item, index) => {
     message += `${index + 1}. *${item.name}*\n`;
     if (item.specs) {
@@ -33,10 +33,10 @@ export function sendOrderToWhatsApp(cartItems, total) {
     message += `   Precio: $${item.price.toLocaleString('es-MX')}\n`;
     message += `   Subtotal: $${(item.price * item.quantity).toLocaleString('es-MX')}\n\n`;
   });
-  
+
   message += `*Total: $${total.toLocaleString('es-MX')} MXN*\n\n`;
   message += 'Estoy interesado en completar esta compra. ¿Cuáles son los siguientes pasos?';
-  
+
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
   window.open(url, '_blank');
@@ -48,7 +48,7 @@ export function sendOrderToWhatsApp(cartItems, total) {
  */
 export function sendLicenseOrderToWhatsApp(licenses) {
   let message = '🔑 *Solicitud de Licencias - SIA TEC*\n\n';
-  
+
   licenses.forEach((license, index) => {
     message += `${index + 1}. *${license.name}*\n`;
     if (license.type) {
@@ -57,11 +57,11 @@ export function sendLicenseOrderToWhatsApp(licenses) {
     message += `   Cantidad: ${license.quantity}\n`;
     message += `   Precio: $${license.price.toLocaleString('es-MX')}\n\n`;
   });
-  
+
   const total = licenses.reduce((sum, lic) => sum + (lic.price * lic.quantity), 0);
   message += `*Total: $${total.toLocaleString('es-MX')} MXN*\n\n`;
   message += 'Deseo adquirir estas licencias. ¿Cuál es el proceso de activación?';
-  
+
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
   window.open(url, '_blank');
@@ -73,7 +73,7 @@ export function sendLicenseOrderToWhatsApp(licenses) {
  */
 export function sendAppointmentToWhatsApp(appointmentData) {
   const { name, phone, email, deviceType, problem, date, time, serviceType } = appointmentData;
-  
+
   let message = '🔧 *Solicitud de Cita - Reparación*\n\n';
   message += `*Datos del Cliente:*\n`;
   message += `Nombre: ${name}\n`;
@@ -92,7 +92,7 @@ export function sendAppointmentToWhatsApp(appointmentData) {
   message += `\n*Fecha y Hora Preferida:*\n`;
   message += `${date} a las ${time}\n\n`;
   message += '¿Pueden confirmar mi cita?';
-  
+
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
   window.open(url, '_blank');
@@ -108,4 +108,16 @@ export function formatCurrency(amount) {
     style: 'currency',
     currency: 'MXN'
   }).format(amount);
+}
+
+/**
+ * Sends streaming service request to WhatsApp
+ * @param {string} serviceName - Name of the streaming service
+ */
+export function requestStreamingService(serviceName) {
+  const message = encodeURIComponent(
+    `Hola! Me interesa adquirir una cuenta de *${serviceName}*. ¿Me podrían dar más información?`
+  );
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+  window.open(url, '_blank');
 }
