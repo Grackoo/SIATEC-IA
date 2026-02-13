@@ -193,7 +193,7 @@ a:hover {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 184, 212, 0.5);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 0, 0, 0);
 }
 
 .btn-secondary {
