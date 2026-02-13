@@ -20,18 +20,18 @@ export default function Home() {
                 </div>
                 <div className="container relative z-10">
                     <div className="hero-content text-white">
-                        <h1 className="hero-title">
+                        <h1 className="hero-title text-white drop-shadow-lg" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.8)' }}>
                             Soluciones Informáticas Avanzadas
                         </h1>
-                        <p className="hero-subtitle">
+                        <p className="hero-subtitle text-white drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                             Venta y Reparación de Equipos de Cómputo con Garantía y Eficiencia
                         </p>
                         <div className="hero-buttons">
-                            <a href="#laptops" className="btn btn-primary btn-lg">
+                            <a href="#laptops" className="btn btn-primary btn-lg box-shadow-lg">
                                 <Laptop size={24} />
                                 Explorar Laptops
                             </a>
-                            <Link to="/appointment" className="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-black">
+                            <Link to="/appointment" className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
                                 Solicitar Reparación
                             </Link>
                         </div>
