@@ -138,7 +138,7 @@ a {
 }
 
 a:hover {
-  color: var(--primary-cyan-light);
+  color: rgba(0, 0, 0, 0.4);
 }
 
 /* === CONTAINER === */
