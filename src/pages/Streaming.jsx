@@ -49,11 +49,11 @@ export default function Streaming() {
     ];
 
     return (
-        <div className="streaming-page section" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="streaming-page section">
             <div className="container">
                 <header className="streaming-header">
-                    <h1 style={{ color: '#1F2937' }}>Cuentas de Streaming</h1>
-                    <p style={{ color: '#4B5563', maxWidth: '600px', margin: '0 auto' }}>
+                    <h1>Cuentas de Streaming</h1>
+                    <p style={{ maxWidth: '600px', margin: '0 auto' }}>
                         Disfruta del mejor entretenimiento con nuestras cuentas premium garantizadas.
                         <br />
                         <span style={{ color: '#2563EB', fontWeight: 600 }}>Solicita la tuya directamente por WhatsApp.</span>
@@ -82,7 +82,7 @@ export default function Streaming() {
                 </div>
 
                 <div className="guarantee-section">
-                    <h2 className="text-center" style={{ color: '#1F2937', marginBottom: '2rem' }}>¿Por qué elegir nuestro servicio?</h2>
+                    <h2 className="text-center" style={{ marginBottom: '2rem' }}>¿Por qué elegir nuestro servicio?</h2>
                     <div className="guarantee-grid">
                         <div className="guarantee-item">
                             <div className="guarantee-icon">
