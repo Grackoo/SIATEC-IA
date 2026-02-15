@@ -25,7 +25,8 @@ export function ProductsProvider({ children }) {
                     price: Number(item.price),
                     condition: item.specs?.condition || 'Reacondicionada', // Default fallback
                     specs: formatSpecs(item.specs),
-                    images: item.image_url ? [item.image_url] : ['https://via.placeholder.com/400'], // Fallback image
+                    specsRaw: item.specs, // Keep raw specs for tooltip
+                    images: item.images && item.images.length > 0 ? item.images : (item.image_url ? [item.image_url] : ['https://via.placeholder.com/400']),
                     category: item.category,
                     inStock: item.stock > 0
                 }));

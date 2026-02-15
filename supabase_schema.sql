@@ -10,10 +10,15 @@ create table inventory (
   stock integer default 0,
   specs jsonb default '{}'::jsonb,
   image_url text,
+  images text[], -- Array of image URLs
   active boolean default true,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()
 );
+
+-- Comments for existing tables migration
+-- alter table inventory add column if not exists images text[];
+-- update inventory set images = array[image_url] where image_url is not null and images is null;
 
 -- Create Sales Table
 create table sales (

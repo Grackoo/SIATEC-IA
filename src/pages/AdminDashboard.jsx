@@ -19,6 +19,7 @@ export default function AdminDashboard() {
         price: '',
         stock: '',
         image_url: '',
+        images: [],
         specs: '{}'
     });
 
@@ -51,7 +52,8 @@ export default function AdminDashboard() {
             ...formData,
             price: parseFloat(formData.price),
             stock: parseInt(formData.stock),
-            specs: specsJson
+            specs: specsJson,
+            image_url: formData.images.length > 0 ? formData.images[0] : null
         };
 
         try {
@@ -60,7 +62,7 @@ export default function AdminDashboard() {
             } else {
                 await addProduct(productData);
             }
-            setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', specs: '{}' });
+            setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}' });
             setEditingProduct(null);
             setIsAddingString(false);
             alert("Producto guardado exitosamente");
@@ -77,6 +79,7 @@ export default function AdminDashboard() {
             price: product.price,
             stock: product.stock,
             image_url: product.image_url || '',
+            images: product.images || (product.image_url ? [product.image_url] : []),
             specs: JSON.stringify(product.specs, null, 2)
         });
         setIsAddingString(true);
@@ -85,30 +88,45 @@ export default function AdminDashboard() {
     const handleImageUpload = async (e) => {
         try {
             setUploading(true);
-            const file = e.target.files[0];
-            if (!file) return;
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
 
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `${fileName}`;
+            const newImages = [];
 
-            const { error: uploadError } = await supabase.storage
-                .from('products')
-                .upload(filePath, file);
+            for (const file of files) {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Math.random()}.${fileExt}`;
+                const filePath = `${fileName}`;
 
-            if (uploadError) {
-                throw uploadError;
+                const { error: uploadError } = await supabase.storage
+                    .from('products')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data } = supabase.storage.from('products').getPublicUrl(filePath);
+                newImages.push(data.publicUrl);
             }
 
-            const { data } = supabase.storage.from('products').getPublicUrl(filePath);
+            setFormData(prev => ({
+                ...prev,
+                images: [...prev.images, ...newImages],
+                image_url: prev.image_url || newImages[0] // Set main image if empty
+            }));
 
-            setFormData(prev => ({ ...prev, image_url: data.publicUrl }));
-            alert("Imagen subida correctamente!");
+            alert(`${newImages.length} imagen(es) subida(s) correctamente!`);
         } catch (error) {
             alert('Error subiendo imagen: ' + error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const removeImage = (indexToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.filter((_, index) => index !== indexToRemove)
+        }));
     };
 
     const handleDelete = async (id) => {
@@ -161,7 +179,7 @@ export default function AdminDashboard() {
                             </button>
                             {!isAddingString && !isBulkEdit && (
                                 <button
-                                    onClick={() => { setIsAddingString(true); setEditingProduct(null); setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', specs: '{}' }); }}
+                                    onClick={() => { setIsAddingString(true); setEditingProduct(null); setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}' }); }}
                                     className="btn btn-primary flex items-center gap-2"
                                 >
                                     <Plus size={20} /> Nuevo Producto
@@ -195,29 +213,36 @@ export default function AdminDashboard() {
                                     <input required type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20" />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm mb-1">Imagen del Producto</label>
+                                    <label className="block text-sm mb-1">Imágenes del Producto</label>
                                     <div className="flex gap-2 mb-2">
-                                        <input
-                                            type="text"
-                                            name="image_url"
-                                            value={formData.image_url}
-                                            onChange={handleInputChange}
-                                            className="w-full p-2 rounded bg-black/50 border border-white/20"
-                                            placeholder="URL de imagen o subir archivo ->"
-                                        />
                                         <label className="btn btn-secondary cursor-pointer flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded">
                                             <Upload size={18} />
-                                            {uploading ? '...' : 'Subir'}
+                                            {uploading ? 'Subiendo...' : 'Subir Imágenes'}
                                             <input
                                                 type="file"
                                                 accept="image/*"
+                                                multiple
                                                 onChange={handleImageUpload}
                                                 className="hidden"
                                                 disabled={uploading}
                                             />
                                         </label>
                                     </div>
-                                    {formData.image_url && <img src={formData.image_url} alt="Vista previa" className="h-20 rounded border border-white/10" />}
+                                    <div className="flex gap-2 flex-wrap">
+                                        {formData.images.map((img, idx) => (
+                                            <div key={idx} className="relative group">
+                                                <img src={img} alt={`Preview ${idx}`} className="h-20 w-20 object-cover rounded border border-white/10" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage(idx)}
+                                                    className="absolute -top-2 -right-2 bg-red-600 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-1">Puedes subir múltiples imágenes. La primera será la principal.</p>
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm mb-1">Especificaciones (JSON)</label>

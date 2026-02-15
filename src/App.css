@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -39,4 +42,21 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* === PRODUCT SPECS TOOLTIP === */
+.product-specs-tooltip {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.product-specs-tooltip h4 {
+  color: #4ade80;
+  /* Tailwind blue-400 equivalent or modify as needed, using #22d3ee (cyan) to match site */
+  color: rgb(0, 184, 212);
+  /* Match primary-cyan */
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
 }
