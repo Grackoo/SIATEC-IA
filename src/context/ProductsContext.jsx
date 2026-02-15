@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { initialProducts } from '../data/initialProducts';
+import { useSupabase } from './SupabaseContext';
 
 const ProductsContext = createContext();
 
@@ -12,41 +12,44 @@ export function useProducts() {
 }
 
 export function ProductsProvider({ children }) {
-    const [products, setProducts] = useState(() => {
-        // Load products from localStorage, or use initial products
-        const savedProducts = localStorage.getItem('siatec-products');
-        return savedProducts ? JSON.parse(savedProducts) : initialProducts;
-    });
+    const { inventory, loading: supabaseLoading } = useSupabase();
+    const [products, setProducts] = useState([]);
 
-    // Save products to localStorage whenever they change
     useEffect(() => {
-        localStorage.setItem('siatec-products', JSON.stringify(products));
-    }, [products]);
+        if (!supabaseLoading && inventory) {
+            const mappedProducts = inventory
+                .filter(item => item.category === 'laptop' || item.category === 'software') // Filter relevant categories
+                .map(item => ({
+                    id: item.id,
+                    name: item.title,
+                    price: Number(item.price),
+                    condition: item.specs?.condition || 'Reacondicionada', // Default fallback
+                    specs: formatSpecs(item.specs),
+                    images: item.image_url ? [item.image_url] : ['https://via.placeholder.com/400'], // Fallback image
+                    category: item.category,
+                    inStock: item.stock > 0
+                }));
+            setProducts(mappedProducts);
+        }
+    }, [inventory, supabaseLoading]);
 
-    const addProduct = (product) => {
-        const newProduct = {
-            ...product,
-            id: `laptop-${Date.now()}`,
-            category: 'laptop',
-            inStock: true,
-        };
-        setProducts((prevProducts) => [...prevProducts, newProduct]);
-        return newProduct;
+    // Helper to format specs object to string
+    const formatSpecs = (specs) => {
+        if (!specs) return '';
+        // If it's already a string, return it
+        if (typeof specs === 'string') return specs;
+
+        // Exclude internal fields like 'condition'
+        const { condition, ...rest } = specs;
+
+        // Join values
+        return Object.values(rest).join(', ');
     };
 
-    const updateProduct = (productId, updatedData) => {
-        setProducts((prevProducts) =>
-            prevProducts.map((product) =>
-                product.id === productId ? { ...product, ...updatedData } : product
-            )
-        );
-    };
-
-    const deleteProduct = (productId) => {
-        setProducts((prevProducts) =>
-            prevProducts.filter((product) => product.id !== productId)
-        );
-    };
+    // Legacy functions shimmed to warn or do nothing, as we now use SupabaseContext for mutations
+    const addProduct = () => console.warn("Use useSupabase for adding products");
+    const updateProduct = () => console.warn("Use useSupabase for updating products");
+    const deleteProduct = () => console.warn("Use useSupabase for deleting products");
 
     const getProductById = (productId) => {
         return products.find((product) => product.id === productId);
@@ -63,6 +66,7 @@ export function ProductsProvider({ children }) {
         deleteProduct,
         getProductById,
         getProductsByCondition,
+        loading: supabaseLoading
     };
 
     return (

@@ -1,52 +1,57 @@
-import React from 'react';
-import { Play, Music } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Play, Music, Wifi } from 'lucide-react';
 import { requestStreamingService } from '../utils/whatsapp';
+import { useSupabase } from '../context/SupabaseContext';
 
 export default function Streaming() {
-    const services = [
-        {
-            id: 'netflix',
-            name: 'Netflix',
-            icon: <span className="service-icon-text">N</span>,
-            description: 'Películas, series y documentales ilimitados.',
-            headerClass: 'service-netflix'
-        },
-        {
-            id: 'vix',
-            name: 'ViX+',
-            icon: <span className="service-icon-text">ViX+</span>,
-            description: 'El servicio de streaming en español más grande del mundo.',
-            headerClass: 'service-vix'
-        },
-        {
-            id: 'paramount',
-            name: 'Paramount+',
-            icon: <span className="service-icon-text">Paramount+</span>,
-            description: 'Una montaña de entretenimiento.',
-            headerClass: 'service-paramount'
-        },
-        {
-            id: 'hbo',
-            name: 'HBO Max',
-            icon: <span className="service-icon-text">HBO MAX</span>,
-            description: 'Todo lo que amas, todo en un solo lugar.',
-            headerClass: 'service-hbo'
-        },
-        {
-            id: 'spotify',
-            name: 'Spotify Premium',
-            icon: <Music size={48} />,
-            description: 'Música sin anuncios, modo offline y más.',
-            headerClass: 'service-spotify'
-        },
-        {
-            id: 'disney',
-            name: 'Disney+',
-            icon: <span className="service-icon-text">Disney+</span>,
-            description: 'Las mejores historias de Disney, Pixar, Marvel y más.',
-            headerClass: 'service-disney'
+    const { inventory } = useSupabase();
+    const [streamingServices, setStreamingServices] = useState([]);
+
+    // UI Configuration (Templates)
+    const serviceTemplates = {
+        'netflix': { icon: <span className="service-icon-text">N</span>, headerClass: 'service-netflix' },
+        'vix': { icon: <span className="service-icon-text">ViX+</span>, headerClass: 'service-vix' },
+        'paramount': { icon: <span className="service-icon-text">Paramount+</span>, headerClass: 'service-paramount' },
+        'hbo': { icon: <span className="service-icon-text">HBO MAX</span>, headerClass: 'service-hbo' },
+        'spotify': { icon: <Music size={48} />, headerClass: 'service-spotify' },
+        'disney': { icon: <span className="service-icon-text">Disney+</span>, headerClass: 'service-disney' }
+    };
+
+    useEffect(() => {
+        // Filter inventory for streaming category
+        const dbServices = inventory.filter(item => item.category === 'streaming');
+
+        if (dbServices.length > 0) {
+            // Map DB items to UI structure
+            const mappedServices = dbServices.map(item => {
+                // Try to match with template by checking if title contains key (case insensitive)
+                const templateKey = Object.keys(serviceTemplates).find(key =>
+                    item.title.toLowerCase().includes(key)
+                );
+
+                const template = templateKey ? serviceTemplates[templateKey] : {
+                    icon: <Wifi size={48} />,
+                    headerClass: 'bg-gray-800' // Default style
+                };
+
+                return {
+                    id: item.id,
+                    name: item.title,
+                    icon: template.icon,
+                    description: item.specs?.description || 'Servicio de streaming premium.',
+                    headerClass: template.headerClass,
+                    price: item.price
+                };
+            });
+            setStreamingServices(mappedServices);
+        } else {
+            // Fallback for demo if DB is empty
+            setStreamingServices([
+                { id: 'demo1', name: 'Netflix (Demo)', icon: serviceTemplates['netflix'].icon, description: 'Ejemplo (Base de datos vacía)', headerClass: serviceTemplates['netflix'].headerClass },
+                { id: 'demo2', name: 'Disney+ (Demo)', icon: serviceTemplates['disney'].icon, description: 'Ejemplo (Base de datos vacía)', headerClass: serviceTemplates['disney'].headerClass }
+            ]);
         }
-    ];
+    }, [inventory]);
 
     return (
         <div className="streaming-page section">
@@ -61,7 +66,7 @@ export default function Streaming() {
                 </header>
 
                 <div className="streaming-grid">
-                    {services.map((service) => (
+                    {streamingServices.map((service) => (
                         <div key={service.id} className="service-card">
                             <div className={`service-header ${service.headerClass}`}>
                                 {service.icon}
@@ -69,6 +74,7 @@ export default function Streaming() {
                             <div className="service-body">
                                 <h3 className="service-title">{service.name}</h3>
                                 <p className="service-description">{service.description}</p>
+                                {service.price > 0 && <p className="text-xl font-bold mb-2">${service.price} MXN</p>}
                                 <button
                                     onClick={() => requestStreamingService(service.name)}
                                     className="btn btn-whatsapp"

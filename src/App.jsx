@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import Licenses from './pages/Licenses';
 import Appointment from './pages/Appointment';
 import Streaming from './pages/Streaming';
+import AdminDashboard from './pages/AdminDashboard'; // Import Admin Dashboard
 
 // Estilos globales
 import './index.css';
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/licenses" element={<Licenses />} />
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/streaming" element={<Streaming />} />
+                <Route path="/admin" element={<AdminDashboard />} />
               </Routes>
             </main>
             <Footer />
