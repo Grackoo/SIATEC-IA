@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-gradient-to-br from-cyan-500 to-blue-600 w-8 h-8 rounded-lg flex items-center justify-center text-black font-bold text-sm">
-                            A
+
                         </div>
                         <h1 className="text-lg font-bold tracking-tight text-white">SIATEC <span className="text-cyan-400 font-normal">Admin</span></h1>
                     </div>
