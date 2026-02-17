@@ -78,9 +78,13 @@ export default function Home() {
                         </p>
                     </div>
                     <div className="products-grid">
-                        {products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
+                        <div className="products-grid">
+                            {products
+                                .filter(product => product.category === 'laptop')
+                                .map((product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))}
+                        </div>
                     </div>
                 </div>
             </section>

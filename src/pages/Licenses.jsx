@@ -1,12 +1,39 @@
 import React from 'react';
-// CORRECCIÓN: Cambiamos 'Windows' por 'AppWindow' (un icono genérico de ventana)
-import { Shield, AppWindow, Key } from 'lucide-react';
+import { Shield, AppWindow, Key, Package } from 'lucide-react';
 import LicenseCard from '../components/Licenses/LicenseCard';
-import { licenseData } from '../data/initialProducts';
+import { useProducts } from '../context/ProductsContext';
 
 export default function Licenses() {
-    const windowsLicenses = licenseData.filter(lic => lic.type === 'Sistema Operativo');
-    const antivirusLicenses = licenseData.filter(lic => lic.type === 'Antivirus');
+    const { products, loading } = useProducts();
+
+    // 1. Loading State
+    if (loading) {
+        return (
+            <div className="licenses-page min-h-screen flex items-center justify-center">
+                <div className="text-xl text-gray-400 animate-pulse">Cargando catálogo de software...</div>
+            </div>
+        );
+    }
+
+    // 2. Filter software products
+    const softwareProducts = products.filter(p => p.category === 'software');
+
+    // 3. Robust categorization
+    const windowsLicenses = softwareProducts.filter(p => {
+        const type = p.specsRaw?.type || '';
+        const name = p.name || '';
+        return type === 'Sistema Operativo' || name.toLowerCase().includes('windows') || name.toLowerCase().includes('microsoft');
+    });
+
+    // New category for Antivirus
+    const antivirusLicenses = softwareProducts.filter(p => {
+        const type = p.specsRaw?.type || '';
+        const name = p.name || '';
+        return type === 'Antivirus' || name.toLowerCase().includes('antivirus') || name.toLowerCase().includes('security') || name.toLowerCase().includes('kaspersky') || name.toLowerCase().includes('eset') || name.toLowerCase().includes('mcafee');
+    });
+
+    // Everything else
+    const otherLicenses = softwareProducts.filter(p => !windowsLicenses.includes(p) && !antivirusLicenses.includes(p));
 
     return (
         <div className="licenses-page">
@@ -23,56 +50,71 @@ export default function Licenses() {
                 </div>
             </section>
 
-            {/* Windows Section */}
+            {/* Software Content */}
             <section className="licenses-section section">
                 <div className="container">
-                    <div className="section-title-group">
-                        {/* CORRECCIÓN: Usamos el nuevo icono aquí */}
-                        <AppWindow size={32} className="section-icon" />
-                        <div>
-                            <h2>Microsoft Windows</h2>
-                            <p>Sistemas operativos originales con licencia permanente</p>
+                    {softwareProducts.length === 0 ? (
+                        <div className="text-center py-10 bg-white/5 rounded-xl border border-white/10">
+                            <p className="text-xl text-gray-400 mb-2">No hay licencias disponibles en este momento.</p>
+                            <p className="text-sm text-gray-500">Intenta agregar productos en el panel de administración con categoría 'Software'.</p>
                         </div>
-                    </div>
-                    <div className="licenses-grid">
-                        {windowsLicenses.map((license) => (
-                            <LicenseCard key={license.id} license={license} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+                    ) : (
+                        <div className="space-y-16">
+                            {/* Windows Section */}
+                            {windowsLicenses.length > 0 && (
+                                <div>
+                                    <div className="section-title-group mb-8">
+                                        <AppWindow size={32} className="section-icon" />
+                                        <div>
+                                            <h2>Sistemas Operativos</h2>
+                                            <p>Windows y Software de Microsoft</p>
+                                        </div>
+                                    </div>
+                                    <div className="licenses-grid">
+                                        {windowsLicenses.map((product) => (
+                                            <LicenseCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
-            {/* Antivirus Section */}
-            <section className="licenses-section section">
-                <div className="container">
-                    <div className="section-title-group">
-                        <Shield size={32} className="section-icon" />
-                        <div>
-                            <h2>Antivirus y Seguridad</h2>
-                            <p>Protege tus dispositivos con las mejores soluciones de seguridad</p>
+                            {/* Antivirus Section */}
+                            {antivirusLicenses.length > 0 && (
+                                <div>
+                                    <div className="section-title-group mb-8">
+                                        <Shield size={32} className="section-icon" />
+                                        <div>
+                                            <h2>Antivirus y Seguridad</h2>
+                                            <p>Protege tus equipos contra amenazas</p>
+                                        </div>
+                                    </div>
+                                    <div className="licenses-grid">
+                                        {antivirusLicenses.map((product) => (
+                                            <LicenseCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Other Software */}
+                            {otherLicenses.length > 0 && (
+                                <div>
+                                    <div className="section-title-group mb-8">
+                                        <Package size={32} className="section-icon" />
+                                        <div>
+                                            <h2>Otros Programas</h2>
+                                            <p>Herramientas, Utilidades y Más</p>
+                                        </div>
+                                    </div>
+                                    <div className="licenses-grid">
+                                        {otherLicenses.map((product) => (
+                                            <LicenseCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </div>
-                    <div className="licenses-grid">
-                        {antivirusLicenses.map((license) => (
-                            <LicenseCard key={license.id} license={license} />
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Info Section */}
-            <section className="info-section section">
-                <div className="container">
-                    <div className="info-card">
-                        <h3>¿Por qué comprar licencias originales?</h3>
-                        <ul className="info-list">
-                            <li>Actualizaciones de seguridad automáticas</li>
-                            <li>Soporte técnico oficial</li>
-                            <li>Cumplimiento legal y protección de datos</li>
-                            <li>Máximo rendimiento y compatibilidad</li>
-                            <li>Sin riesgos de malware o software modificado</li>
-                        </ul>
-                    </div>
+                    )}
                 </div>
             </section>
         </div>

@@ -460,6 +460,19 @@
     z-index: 10;
 }
 
+.badge-laptop {
+    background-color: #ef4444;
+    /* Red-500 */
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
 .product-info {
     padding: var(--spacing-lg);
     display: flex;
@@ -762,8 +775,15 @@
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--spacing-2xl);
+    width: 100%;
 }
 
 .feature-card {

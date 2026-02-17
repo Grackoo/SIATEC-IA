@@ -15,12 +15,14 @@ export default function ProductCard({ product }) {
             {/* Image Carousel */}
             <ImageCarousel images={product.images} alt={product.name} />
 
-            {/* Condition Badge */}
-            <div className="product-badge">
-                <span className={`badge ${product.condition === 'Nueva' ? 'badge-success' : 'badge-primary'}`}>
-                    {product.condition}
-                </span>
-            </div>
+            {/* Condition Badge - Only for Laptops */}
+            {product.category === 'laptop' && (
+                <div className="product-badge">
+                    <span className="badge-laptop">
+                        {product.condition || 'Reacondicionada'}
+                    </span>
+                </div>
+            )}
 
             {/* Specs Tooltip */}
             {product.specsRaw && typeof product.specsRaw === 'object' && (
