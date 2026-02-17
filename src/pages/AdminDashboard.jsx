@@ -1,16 +1,23 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
-import { Plus, Edit, Trash, Save, X, DollarSign, Package, Upload } from 'lucide-react';
+import { Plus, Edit, Trash, Save, X, DollarSign, Package, Upload, Search, Lock, LogOut, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 export default function AdminDashboard() {
     const { inventory, sales, loading, fetchInventory, fetchSales, addProduct, updateProduct, deleteProduct } = useSupabase();
+
+    // Auth State
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [password, setPassword] = useState('');
+    const [authError, setAuthError] = useState('');
+
+    // Dashboard State
     const [activeTab, setActiveTab] = useState('inventory');
     const [editingProduct, setEditingProduct] = useState(null);
-    const [isAddingString, setIsAddingString] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isBulkEdit, setIsBulkEdit] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     // Form State
     const [formData, setFormData] = useState({
@@ -25,9 +32,32 @@ export default function AdminDashboard() {
     });
 
     useEffect(() => {
-        fetchInventory();
-        fetchSales();
+        const sessionAuth = sessionStorage.getItem('siatec_admin_auth');
+        if (sessionAuth === 'true') {
+            setIsAuthenticated(true);
+            fetchInventory();
+            fetchSales();
+        }
     }, []);
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        if (password === 'admin') { // Simple client-side protection
+            setIsAuthenticated(true);
+            sessionStorage.setItem('siatec_admin_auth', 'true');
+            fetchInventory();
+            fetchSales();
+            setAuthError('');
+        } else {
+            setAuthError('Contraseña incorrecta');
+        }
+    };
+
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        sessionStorage.removeItem('siatec_admin_auth');
+        setPassword('');
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -36,6 +66,40 @@ export default function AdminDashboard() {
 
     const handleSpecsChange = (e) => {
         setFormData(prev => ({ ...prev, specs: e.target.value }));
+    };
+
+    const openModal = (product = null) => {
+        if (product) {
+            setEditingProduct(product);
+            setFormData({
+                title: product.title,
+                category: product.category,
+                price: product.price,
+                stock: product.stock,
+                image_url: product.image_url || '',
+                images: product.images || (product.image_url ? [product.image_url] : []),
+                specs: JSON.stringify(product.specs, null, 2),
+                condition: product.specs?.condition || 'Reacondicionada'
+            });
+        } else {
+            setEditingProduct(null);
+            setFormData({
+                title: '',
+                category: 'laptop',
+                price: '',
+                stock: '',
+                image_url: '',
+                images: [],
+                specs: '{}',
+                condition: 'Reacondicionada'
+            });
+        }
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingProduct(null);
     };
 
     const handleSubmit = async (e) => {
@@ -157,223 +221,366 @@ export default function AdminDashboard() {
         }
     };
 
-    return (
-        <div className="section container" style={{ paddingTop: '8rem' }}>
-            <h1 className="text-3xl font-bold mb-8">Panel de Administración</h1>
-
-            <div className="flex gap-4 mb-8 border-b border-white/10 pb-4">
-                <button
-                    onClick={() => setActiveTab('inventory')}
-                    className={`px-4 py-2 rounded-lg flex items-center gap-2 ${activeTab === 'inventory' ? 'bg-blue-600 text-white' : 'hover:bg-white/5'}`}
-                >
-                    <Package size={20} /> Inventario
-                </button>
-                <button
-                    onClick={() => setActiveTab('sales')}
-                    className={`px-4 py-2 rounded-lg flex items-center gap-2 ${activeTab === 'sales' ? 'bg-blue-600 text-white' : 'hover:bg-white/5'}`}
-                >
-                    <DollarSign size={20} /> Ventas
-                </button>
-            </div>
-
-            {activeTab === 'inventory' && (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold">Inventario</h2>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setIsBulkEdit(!isBulkEdit)}
-                                className={`btn flex items-center gap-2 ${isBulkEdit ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-700 hover:bg-gray-600'}`}
-                            >
-                                <DollarSign size={20} /> {isBulkEdit ? 'Guardar Cambios' : 'Edición Masiva de Precios'}
-                            </button>
-                            {!isAddingString && !isBulkEdit && (
-                                <button
-                                    onClick={() => { setIsAddingString(true); setEditingProduct(null); setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}', condition: 'Reacondicionada' }); }}
-                                    className="btn btn-primary flex items-center gap-2"
-                                >
-                                    <Plus size={20} /> Nuevo Producto
-                                </button>
-                            )}
+    // --- LOCK SCREEN ---
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-black/95">
+                <div className="bg-[#121212] p-8 rounded-2xl border border-white/10 shadow-2xl max-w-md w-full text-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent pointer-events-none" />
+                    <div className="relative z-10">
+                        <div className="mx-auto bg-cyan-500/10 w-20 h-20 rounded-full flex items-center justify-center mb-6 border border-cyan-500/20">
+                            <Lock size={32} className="text-cyan-400" />
                         </div>
+                        <h2 className="text-2xl font-bold mb-2 text-white">Acceso Restringido</h2>
+                        <p className="text-gray-400 mb-8 text-sm">Ingresa la contraseña de administrador para continuar.</p>
+
+                        <form onSubmit={handleLogin} className="space-y-4">
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyan-500 focus:outline-none transition-colors"
+                                placeholder="Contraseña..."
+                                autoFocus
+                            />
+                            {authError && <p className="text-red-400 text-sm">{authError}</p>}
+                            <button
+                                type="submit"
+                                className="w-full bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-black font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02]"
+                            >
+                                Acceder al Panel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- DASHBOARD UI ---
+    return (
+        <div className="min-h-screen bg-black text-gray-100 font-sans selection:bg-cyan-500/30">
+            {/* Navbar */}
+            <nav className="border-b border-white/10 bg-[#121212]/80 backdrop-blur-md sticky top-0 z-30">
+                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 w-10 h-10 rounded-lg flex items-center justify-center text-black font-bold">
+                            A
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight text-white">SIATEC <span className="text-cyan-400 font-normal">Admin</span></h1>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm text-gray-400 hidden md:block">Sesión Activa</span>
+                        <button onClick={handleLogout} className="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-white transition-colors">
+                            <LogOut size={20} />
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <main className="container mx-auto px-6 py-8">
+                {/* Stats / Actions Bar */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                    <div className="flex bg-[#1E1E1E] p-1 rounded-xl border border-white/5">
+                        <button
+                            onClick={() => setActiveTab('inventory')}
+                            className={`px-6 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all ${activeTab === 'inventory' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-lg shadow-cyan-900/20' : 'text-gray-400 hover:text-gray-200'}`}
+                        >
+                            <Package size={18} /> Inventario
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('sales')}
+                            className={`px-6 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all ${activeTab === 'sales' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-lg shadow-cyan-900/20' : 'text-gray-400 hover:text-gray-200'}`}
+                        >
+                            <DollarSign size={18} /> Ventas
+                        </button>
                     </div>
 
-                    {isAddingString && (
-                        <div className="bg-white/5 p-6 rounded-xl mb-8 border border-white/10">
-                            <h3 className="text-xl font-bold mb-4">{editingProduct ? 'Editar Producto' : 'Nuevo Producto'}</h3>
-                            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm mb-1">Título</label>
-                                    <input required name="title" value={formData.title} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm mb-1">Categoría</label>
-                                    <select name="category" value={formData.category} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20">
-                                        <option value="laptop">Laptop</option>
-                                        <option value="software">Software</option>
-                                        <option value="streaming">Streaming</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm mb-1">Precio</label>
-                                    <input required type="number" name="price" value={formData.price} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm mb-1">Stock</label>
-                                    <input required type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20" />
-                                </div>
-                                {formData.category === 'laptop' && (
-                                    <div>
-                                        <label className="block text-sm mb-1">Condición</label>
-                                        <select
-                                            name="condition"
-                                            value={formData.condition || 'Reacondicionada'}
-                                            onChange={handleInputChange}
-                                            className="w-full p-2 rounded bg-black/50 border border-white/20"
-                                        >
-                                            <option value="Reacondicionada">Reacondicionada</option>
-                                            <option value="Nueva">Nueva</option>
-                                        </select>
+                    {activeTab === 'inventory' && (
+                        <div className="flex gap-3 w-full md:w-auto">
+                            <div className="relative group flex-grow md:flex-grow-0">
+                                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar producto..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full md:w-64 bg-[#1E1E1E] border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-cyan-500/50 focus:outline-none transition-all"
+                                />
+                            </div>
+                            <button
+                                onClick={() => setIsBulkEdit(!isBulkEdit)}
+                                className={`px-4 py-2 rounded-lg border flex items-center gap-2 text-sm font-medium transition-all ${isBulkEdit ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-[#1E1E1E] border-white/10 hover:border-white/20 text-gray-300'}`}
+                            >
+                                <Edit size={18} />
+                            </button>
+                            <button
+                                onClick={() => openModal()}
+                                className="bg-cyan-500 hover:bg-cyan-400 text-black px-5 py-2 rounded-lg flex items-center gap-2 text-sm font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-105"
+                            >
+                                <Plus size={18} strokeWidth={3} /> Nuevo
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Content Area */}
+                <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl relative">
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+
+                    {activeTab === 'inventory' && (
+                        <div className="relative z-10 overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="border-b border-white/10 text-gray-500 text-xs uppercase tracking-wider bg-white/5">
+                                        <th className="p-4 pl-6">Producto</th>
+                                        <th className="p-4">Categoría</th>
+                                        <th className="p-4">Condición</th>
+                                        <th className="p-4">Precio</th>
+                                        <th className="p-4">Stock</th>
+                                        <th className="p-4 text-right pr-6">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {(inventory.filter(item =>
+                                        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        item.category.toLowerCase().includes(searchTerm.toLowerCase())
+                                    )).map(item => (
+                                        <tr key={item.id} className="hover:bg-white/[0.02] transition-colors group">
+                                            <td className="p-4 pl-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-lg bg-[#1E1E1E] border border-white/10 flex items-center justify-center overflow-hidden">
+                                                        {item.image_url ? (
+                                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <ImageIcon size={20} className="text-gray-600" />
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-medium text-white">{item.title}</h3>
+                                                        <span className="text-xs text-gray-500 truncate max-w-[200px] block opacity-0 group-hover:opacity-100 transition-opacity">ID: {item.id}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4">
+                                                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-gray-300 capitalize">
+                                                    {item.category}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                {item.category === 'laptop' && (
+                                                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${item.specs?.condition === 'Nueva' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-orange-500/10 border-orange-500/20 text-orange-400'}`}>
+                                                        {item.specs?.condition || 'Reacondicionada'}
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="p-4 font-mono text-cyan-400">
+                                                {isBulkEdit ? (
+                                                    <input
+                                                        type="number"
+                                                        defaultValue={item.price}
+                                                        onBlur={(e) => handleBulkPriceUpdate(item.id, e.target.value)}
+                                                        className="w-24 bg-black/50 border border-white/20 rounded px-2 py-1 text-right focus:border-cyan-500 outline-none"
+                                                    />
+                                                ) : (
+                                                    `$${item.price.toLocaleString()}`
+                                                )}
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`font-mono ${item.stock < 3 ? 'text-red-400' : 'text-gray-300'}`}>
+                                                    {item.stock}
+                                                </span>
+                                            </td>
+                                            <td className="p-4 pr-6">
+                                                <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button onClick={() => openModal(item)} className="p-2 hover:bg-cyan-500/10 rounded-lg text-gray-400 hover:text-cyan-400 transition-colors">
+                                                        <Edit size={16} />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors">
+                                                        <Trash size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {inventory.length === 0 && (
+                                        <tr>
+                                            <td colSpan="6" className="p-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center gap-3">
+                                                    <Search size={40} strokeWidth={1.5} className="opacity-20" />
+                                                    <p>No se encontraron productos.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {activeTab === 'sales' && (
+                        <div className="relative z-10 overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="border-b border-white/10 text-gray-500 text-xs uppercase tracking-wider bg-white/5">
+                                        <th className="p-4 pl-6">Fecha</th>
+                                        <th className="p-4">Producto</th>
+                                        <th className="p-4">Cliente / Contacto</th>
+                                        <th className="p-4 text-right pr-6">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {sales.map(sale => (
+                                        <tr key={sale.id} className="hover:bg-white/[0.02] transition-colors">
+                                            <td className="p-4 pl-6 text-gray-300">
+                                                {new Date(sale.sale_date).toLocaleDateString()}
+                                                <span className="block text-xs text-gray-500">{new Date(sale.sale_date).toLocaleTimeString()}</span>
+                                            </td>
+                                            <td className="p-4 font-medium text-white">{sale.inventory?.title || 'Producto Eliminado'}</td>
+                                            <td className="p-4 text-gray-300">
+                                                {sale.customer_contact || <span className="text-gray-600 italic">No registrado</span>}
+                                            </td>
+                                            <td className="p-4 pr-6 text-right font-mono text-cyan-400 font-bold">
+                                                ${sale.total_amount.toLocaleString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {sales.length === 0 && (
+                                        <tr><td colSpan="4" className="p-8 text-center text-gray-500">No hay ventas registradas.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </main>
+
+            {/* MODAL - ADD/EDIT PRODUCT */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={closeModal} />
+                    <div className="bg-[#181818] w-full max-w-2xl rounded-2xl border border-white/10 shadow-2xl relative z-10 flex flex-col max-h-[90vh]">
+                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#1E1E1E] rounded-t-2xl">
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                {editingProduct ? <Edit size={20} className="text-cyan-400" /> : <Plus size={20} className="text-cyan-400" />}
+                                {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
+                            </h3>
+                            <button onClick={closeModal} className="text-gray-400 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <div className="p-6 overflow-y-auto custom-scrollbar">
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-sm text-gray-400 font-medium">Título del Producto</label>
+                                        <input required name="title" value={formData.title} onChange={handleInputChange}
+                                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-cyan-500/50 focus:outline-none focus:bg-black/60 transition-all placeholder:text-gray-600"
+                                            placeholder="Ej. MacBook Pro M1"
+                                        />
                                     </div>
-                                )}
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm mb-1">Imágenes del Producto</label>
-                                    <div className="flex gap-2 mb-2">
-                                        <label className="btn btn-secondary cursor-pointer flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded">
-                                            <Upload size={18} />
-                                            {uploading ? 'Subiendo...' : 'Subir Imágenes'}
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                multiple
-                                                onChange={handleImageUpload}
-                                                className="hidden"
-                                                disabled={uploading}
+                                    <div className="space-y-2">
+                                        <label className="text-sm text-gray-400 font-medium">Categoría</label>
+                                        <div className="relative">
+                                            <select name="category" value={formData.category} onChange={handleInputChange}
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white appearance-none focus:border-cyan-500/50 focus:outline-none transition-all cursor-pointer"
+                                            >
+                                                <option value="laptop">Laptop</option>
+                                                <option value="software">Software</option>
+                                                <option value="streaming">Streaming</option>
+                                            </select>
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">▼</div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm text-gray-400 font-medium">Precio (MXN)</label>
+                                        <div className="relative">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                            <input required type="number" name="price" value={formData.price} onChange={handleInputChange}
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg pl-8 pr-4 py-2.5 text-white focus:border-cyan-500/50 focus:outline-none transition-all font-mono"
+                                                placeholder="0.00"
                                             />
-                                        </label>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2 flex-wrap">
+                                    <div className="space-y-2">
+                                        <label className="text-sm text-gray-400 font-medium">Stock Disponible</label>
+                                        <input required type="number" name="stock" value={formData.stock} onChange={handleInputChange}
+                                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-cyan-500/50 focus:outline-none transition-all font-mono"
+                                            placeholder="0"
+                                        />
+                                    </div>
+
+                                    {formData.category === 'laptop' && (
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="text-sm text-gray-400 font-medium">Condición del Equipo</label>
+                                            <div className="flex gap-4">
+                                                <label className={`flex-1 cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.condition === 'Reacondicionada' ? 'bg-orange-500/10 border-orange-500 text-orange-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
+                                                    <input type="radio" name="condition" value="Reacondicionada" checked={formData.condition === 'Reacondicionada'} onChange={handleInputChange} className="hidden" />
+                                                    Reacondicionada
+                                                </label>
+                                                <label className={`flex-1 cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.condition === 'Nueva' ? 'bg-green-500/10 border-green-500 text-green-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
+                                                    <input type="radio" name="condition" value="Nueva" checked={formData.condition === 'Nueva'} onChange={handleInputChange} className="hidden" />
+                                                    Nueva
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm text-gray-400 font-medium flex justify-between">
+                                        Imágenes
+                                        <span className="text-xs text-cyan-500">{formData.images.length} subidas</span>
+                                    </label>
+
+                                    <div className="grid grid-cols-4 gap-4">
+                                        <label className="col-span-1 aspect-square border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all group">
+                                            <Upload className="text-gray-500 group-hover:text-cyan-500 mb-2" />
+                                            <span className="text-xs text-gray-500 group-hover:text-cyan-500 text-center px-1">
+                                                {uploading ? '...' : 'Subir'}
+                                            </span>
+                                            <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploading} />
+                                        </label>
+
                                         {formData.images.map((img, idx) => (
-                                            <div key={idx} className="relative group">
-                                                <img src={img} alt={`Preview ${idx}`} className="h-20 w-20 object-cover rounded border border-white/10" />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeImage(idx)}
-                                                    className="absolute -top-2 -right-2 bg-red-600 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <X size={12} />
-                                                </button>
+                                            <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-white/10 group">
+                                                <img src={img} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <button type="button" onClick={() => removeImage(idx)} className="bg-red-500 p-1.5 rounded-full text-white hover:bg-red-600 transform hover:scale-110 transition-all">
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+                                                {idx === 0 && <span className="absolute bottom-0 left-0 right-0 bg-cyan-600 text-[10px] text-center text-white font-bold py-0.5">PRINCIPAL</span>}
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-1">Puedes subir múltiples imágenes. La primera será la principal.</p>
                                 </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm mb-1">Especificaciones (JSON)</label>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm text-gray-400 font-medium flex justify-between">
+                                        Especificaciones Técnicas (JSON)
+                                        <a href="#" className="text-xs text-cyan-500 hover:underline">Ver ejemplos</a>
+                                    </label>
                                     <textarea
                                         name="specs"
                                         value={formData.specs}
                                         onChange={handleSpecsChange}
-                                        className="w-full p-2 rounded bg-black/50 border border-white/20 font-mono text-sm h-32"
-                                        placeholder='{"ram": "16GB", "processor": "i5"}'
+                                        className="w-full bg-[#121212] border border-white/10 rounded-lg p-4 text-sm font-mono text-gray-300 focus:border-cyan-500/50 focus:outline-none transition-all h-32 leading-relaxed"
+                                        placeholder='{ "procesador": "Intel Core i5", "ram": "16GB" }'
                                     />
-                                    <p className="text-xs text-gray-400 mt-1">Ingresa un objeto JSON válido.</p>
                                 </div>
-                                <div className="md:col-span-2 flex justify-end gap-3 mt-4">
-                                    <button type="button" onClick={() => setIsAddingString(false)} className="px-4 py-2 rounded hover:bg-white/10 flex items-center gap-2">
-                                        <X size={18} /> Cancelar
+
+                                <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
+                                    <button type="button" onClick={closeModal} className="px-6 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">
+                                        Cancelar
                                     </button>
-                                    <button type="submit" className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 flex items-center gap-2">
-                                        <Save size={18} /> Guardar
+                                    <button type="submit" className="px-6 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-sm shadow-lg shadow-cyan-500/20 transition-all transform hover:translate-y-px">
+                                        Guardar Producto
                                     </button>
                                 </div>
                             </form>
                         </div>
-                    )}
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="border-b border-white/10 text-gray-400">
-                                    <th className="p-3">Producto</th>
-                                    <th className="p-3">Categoría</th>
-                                    <th className="p-3">Precio</th>
-                                    <th className="p-3">Stock</th>
-                                    <th className="p-3 text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {inventory.map(item => (
-                                    <tr key={item.id} className="border-b border-white/5 hover:bg-white/5">
-                                        <td className="p-3 font-medium">{item.title}</td>
-                                        <td className="p-3 capitalize">{item.category}</td>
-                                        <td className="p-3">
-                                            {isBulkEdit ? (
-                                                <input
-                                                    type="number"
-                                                    defaultValue={item.price}
-                                                    onBlur={(e) => handleBulkPriceUpdate(item.id, e.target.value)}
-                                                    className="w-24 p-1 rounded bg-black/50 border border-white/20"
-                                                />
-                                            ) : (
-                                                `$${item.price}`
-                                            )}
-                                        </td>
-                                        <td className="p-3">{item.stock}</td>
-                                        <td className="p-3 flex justify-end gap-2">
-                                            <button onClick={() => startEdit(item)} className="p-2 hover:text-blue-400 text-gray-400">
-                                                <Edit size={18} />
-                                            </button>
-                                            <button onClick={() => handleDelete(item.id)} className="p-2 hover:text-red-400 text-gray-400">
-                                                <Trash size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {inventory.length === 0 && (
-                                    <tr>
-                                        <td colSpan="5" className="p-8 text-center text-gray-500">
-                                            No hay productos en el inventario.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )}
-
-            {activeTab === 'sales' && (
-                <div>
-                    <h2 className="text-2xl font-bold mb-6">Registro de Ventas</h2>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="border-b border-white/10 text-gray-400">
-                                    <th className="p-3">Fecha</th>
-                                    <th className="p-3">Producto</th>
-                                    <th className="p-3">Cliente</th>
-                                    <th className="p-3">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sales.map(sale => (
-                                    <tr key={sale.id} className="border-b border-white/5 hover:bg-white/5">
-                                        <td className="p-3">{new Date(sale.sale_date).toLocaleDateString()}</td>
-                                        <td className="p-3">{sale.inventory?.title || 'Producto Eliminado'}</td>
-                                        <td className="p-3">{sale.customer_contact || 'N/A'}</td>
-                                        <td className="p-3">${sale.total_amount}</td>
-                                    </tr>
-                                ))}
-                                {sales.length === 0 && (
-                                    <tr>
-                                        <td colSpan="4" className="p-8 text-center text-gray-500">
-                                            No hay ventas registradas.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             )}
