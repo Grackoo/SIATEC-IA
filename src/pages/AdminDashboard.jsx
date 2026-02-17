@@ -113,7 +113,9 @@ export default function AdminDashboard() {
         if (formData.category === 'laptop') {
             specsJson.condition = formData.condition || 'Reacondicionada';
         }
-
+        if (formData.category === 'software') {
+            specsJson.condition = formData.condition || 'licencia';
+        }
         const productData = {
             ...formData,
             price: parseFloat(formData.price),
