@@ -20,7 +20,8 @@ export default function AdminDashboard() {
         stock: '',
         image_url: '',
         images: [],
-        specs: '{}'
+        specs: '{}',
+        condition: 'Reacondicionada'
     });
 
     useEffect(() => {
@@ -48,6 +49,14 @@ export default function AdminDashboard() {
             return;
         }
 
+        if (formData.category === 'laptop') {
+            specsJson.condition = formData.condition || 'Reacondicionada';
+        }
+
+        if (formData.category === 'laptop') {
+            specsJson.condition = formData.condition || 'Reacondicionada';
+        }
+
         const productData = {
             ...formData,
             price: parseFloat(formData.price),
@@ -62,7 +71,7 @@ export default function AdminDashboard() {
             } else {
                 await addProduct(productData);
             }
-            setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}' });
+            setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}', condition: 'Reacondicionada' });
             setEditingProduct(null);
             setIsAddingString(false);
             alert("Producto guardado exitosamente");
@@ -80,7 +89,8 @@ export default function AdminDashboard() {
             stock: product.stock,
             image_url: product.image_url || '',
             images: product.images || (product.image_url ? [product.image_url] : []),
-            specs: JSON.stringify(product.specs, null, 2)
+            specs: JSON.stringify(product.specs, null, 2),
+            condition: product.specs?.condition || 'Reacondicionada'
         });
         setIsAddingString(true);
     };
@@ -179,7 +189,7 @@ export default function AdminDashboard() {
                             </button>
                             {!isAddingString && !isBulkEdit && (
                                 <button
-                                    onClick={() => { setIsAddingString(true); setEditingProduct(null); setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}' }); }}
+                                    onClick={() => { setIsAddingString(true); setEditingProduct(null); setFormData({ title: '', category: 'laptop', price: '', stock: '', image_url: '', images: [], specs: '{}', condition: 'Reacondicionada' }); }}
                                     className="btn btn-primary flex items-center gap-2"
                                 >
                                     <Plus size={20} /> Nuevo Producto
@@ -212,6 +222,20 @@ export default function AdminDashboard() {
                                     <label className="block text-sm mb-1">Stock</label>
                                     <input required type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="w-full p-2 rounded bg-black/50 border border-white/20" />
                                 </div>
+                                {formData.category === 'laptop' && (
+                                    <div>
+                                        <label className="block text-sm mb-1">Condición</label>
+                                        <select
+                                            name="condition"
+                                            value={formData.condition || 'Reacondicionada'}
+                                            onChange={handleInputChange}
+                                            className="w-full p-2 rounded bg-black/50 border border-white/20"
+                                        >
+                                            <option value="Reacondicionada">Reacondicionada</option>
+                                            <option value="Nueva">Nueva</option>
+                                        </select>
+                                    </div>
+                                )}
                                 <div className="md:col-span-2">
                                     <label className="block text-sm mb-1">Imágenes del Producto</label>
                                     <div className="flex gap-2 mb-2">
