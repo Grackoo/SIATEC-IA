@@ -336,53 +336,53 @@ export default function AdminDashboard() {
                                                 <table className="w-full text-left border-collapse">
                                                     <thead>
                                                         <tr className="border-b border-white/10 text-gray-500 text-[10px] uppercase tracking-wider bg-black/20">
-                                                            <th className="p-3 pl-4 w-1/2">Producto</th>
-                                                            {category === 'laptop' && <th className="p-3">Condición</th>}
-                                                            <th className="p-3">Precio</th>
-                                                            <th className="p-3">Stock</th>
-                                                            <th className="p-3 text-right pr-4">Acciones</th>
+                                                            <th className="p-2 pl-3 w-1/2">Producto</th>
+                                                            {category === 'laptop' && <th className="p-2">Condición</th>}
+                                                            <th className="p-2">Precio</th>
+                                                            <th className="p-2">Stock</th>
+                                                            <th className="p-2 text-right pr-3">Acciones</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="divide-y divide-white/5 text-sm">
+                                                    <tbody className="divide-y divide-white/5 text-xs">
                                                         {categoryItems.map(item => (
                                                             <tr key={item.id} className="hover:bg-white/[0.02] transition-colors group">
-                                                                <td className="p-2 pl-4">
+                                                                <td className="p-1.5 pl-3">
                                                                     <div>
-                                                                        <h3 className="font-medium text-white text-sm">{item.title}</h3>
-                                                                        <span className="text-[10px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">ID: {item.id}</span>
+                                                                        <h3 className="font-medium text-white text-xs">{item.title}</h3>
+                                                                        <span className="text-[10px] text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">ID: {item.id}</span>
                                                                     </div>
                                                                 </td>
                                                                 {category === 'laptop' && (
-                                                                    <td className="p-2">
-                                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${item.specs?.condition === 'Nueva' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-orange-500/10 border-orange-500/20 text-orange-400'}`}>
+                                                                    <td className="p-1.5">
+                                                                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium border ${item.specs?.condition === 'Nueva' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-orange-500/10 border-orange-500/20 text-orange-400'}`}>
                                                                             {item.specs?.condition || 'Reacondicionada'}
                                                                         </span>
                                                                     </td>
                                                                 )}
-                                                                <td className="p-2 font-mono text-cyan-400 text-xs">
+                                                                <td className="p-1.5 font-mono text-cyan-400 text-xs">
                                                                     {isBulkEdit ? (
                                                                         <input
                                                                             type="number"
                                                                             defaultValue={item.price}
                                                                             onBlur={(e) => handleBulkPriceUpdate(item.id, e.target.value)}
-                                                                            className="w-20 bg-black/50 border border-white/20 rounded px-1 py-0.5 text-right focus:border-cyan-500 outline-none"
+                                                                            className="w-16 bg-black/50 border border-white/20 rounded px-1 py-0.5 text-right focus:border-cyan-500 outline-none text-xs"
                                                                         />
                                                                     ) : (
                                                                         `$${item.price.toLocaleString()}`
                                                                     )}
                                                                 </td>
-                                                                <td className="p-2">
-                                                                    <span className={`font-mono text-xs ${item.stock < 3 ? 'text-red-400' : 'text-gray-300'}`}>
+                                                                <td className="p-1.5">
+                                                                    <span className={`font-mono text-xs ${item.stock < 3 ? 'text-red-400' : 'text-gray-400'}`}>
                                                                         {item.stock}
                                                                     </span>
                                                                 </td>
-                                                                <td className="p-2 pr-4">
+                                                                <td className="p-1.5 pr-3">
                                                                     <div className="flex justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                                                                        <button onClick={() => handleViewSwitch('form', item)} className="p-1.5 hover:bg-cyan-500/10 rounded-md text-gray-400 hover:text-cyan-400 transition-colors">
-                                                                            <Edit size={14} />
+                                                                        <button onClick={() => handleViewSwitch('form', item)} className="p-1 hover:bg-cyan-500/10 rounded-md text-gray-500 hover:text-cyan-400 transition-colors">
+                                                                            <Edit size={12} />
                                                                         </button>
-                                                                        <button onClick={() => handleDelete(item.id)} className="p-1.5 hover:bg-red-500/10 rounded-md text-gray-400 hover:text-red-400 transition-colors">
-                                                                            <Trash size={14} />
+                                                                        <button onClick={() => handleDelete(item.id)} className="p-1 hover:bg-red-500/10 rounded-md text-gray-500 hover:text-red-400 transition-colors">
+                                                                            <Trash size={12} />
                                                                         </button>
                                                                     </div>
                                                                 </td>
@@ -413,30 +413,30 @@ export default function AdminDashboard() {
                                     <table className="w-full text-left border-collapse">
                                         <thead>
                                             <tr className="border-b border-white/10 text-gray-500 text-[10px] uppercase tracking-wider bg-white/5">
-                                                <th className="p-3 pl-4">Fecha</th>
-                                                <th className="p-3">Producto</th>
-                                                <th className="p-3">Cliente / Contacto</th>
-                                                <th className="p-3 text-right pr-4">Total</th>
+                                                <th className="p-2 pl-3">Fecha</th>
+                                                <th className="p-2">Producto</th>
+                                                <th className="p-2">Cliente / Contacto</th>
+                                                <th className="p-2 text-right pr-3">Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-white/5 text-sm">
+                                        <tbody className="divide-y divide-white/5 text-xs">
                                             {sales.map(sale => (
                                                 <tr key={sale.id} className="hover:bg-white/[0.02] transition-colors">
-                                                    <td className="p-3 pl-4 text-gray-300">
+                                                    <td className="p-2 pl-3 text-gray-400">
                                                         {new Date(sale.sale_date).toLocaleDateString()}
-                                                        <span className="block text-[10px] text-gray-500">{new Date(sale.sale_date).toLocaleTimeString()}</span>
+                                                        <span className="block text-[9px] text-gray-600">{new Date(sale.sale_date).toLocaleTimeString()}</span>
                                                     </td>
-                                                    <td className="p-3 font-medium text-white">{sale.inventory?.title || 'Producto Eliminado'}</td>
-                                                    <td className="p-3 text-gray-300">
+                                                    <td className="p-2 font-medium text-gray-200">{sale.inventory?.title || 'Producto Eliminado'}</td>
+                                                    <td className="p-2 text-gray-400">
                                                         {sale.customer_contact || <span className="text-gray-600 italic">No registrado</span>}
                                                     </td>
-                                                    <td className="p-3 pr-4 text-right font-mono text-cyan-400 font-bold">
+                                                    <td className="p-2 pr-3 text-right font-mono text-cyan-400 font-bold">
                                                         ${sale.total_amount.toLocaleString()}
                                                     </td>
                                                 </tr>
                                             ))}
                                             {sales.length === 0 && (
-                                                <tr><td colSpan="4" className="p-6 text-center text-gray-500 text-sm">No hay ventas registradas.</td></tr>
+                                                <tr><td colSpan="4" className="p-4 text-center text-gray-500 text-xs">No hay ventas registradas.</td></tr>
                                             )}
                                         </tbody>
                                     </table>

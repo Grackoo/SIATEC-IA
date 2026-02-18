@@ -15,7 +15,6 @@ export default function Navbar() {
     { path: '/licenses', label: 'Licencias' },
     { path: '/appointment', label: 'Reparación' },
     { path: '/streaming', label: 'Streaming' },
-    { path: '/admin', label: 'Admin' },
   ];
 
   const isActive = (path) => location.pathname === path;

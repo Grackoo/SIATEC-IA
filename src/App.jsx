@@ -34,7 +34,7 @@ function App() {
                 <Route path="/licenses" element={<Licenses />} />
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/streaming" element={<Streaming />} />
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/gestion_interna" element={<AdminDashboard />} />
               </Routes>
             </main>
             <Footer />
