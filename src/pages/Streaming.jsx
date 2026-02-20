@@ -34,13 +34,16 @@ export default function Streaming() {
                     headerClass: 'bg-gray-800' // Default style
                 };
 
+                const hasImage = !!item.image_url;
+
                 return {
                     id: item.id,
                     name: item.title,
-                    icon: template.icon,
+                    icon: hasImage ? <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" /> : template.icon,
                     description: item.specs?.description || 'Servicio de streaming premium.',
-                    headerClass: template.headerClass,
-                    price: item.price
+                    headerClass: hasImage ? 'bg-[#121212]' : template.headerClass,
+                    price: item.price,
+                    hasImage
                 };
             });
             setStreamingServices(mappedServices);
@@ -68,7 +71,7 @@ export default function Streaming() {
                 <div className="streaming-grid">
                     {streamingServices.map((service) => (
                         <div key={service.id} className="service-card">
-                            <div className={`service-header ${service.headerClass}`}>
+                            <div className={`service-header ${service.headerClass} ${service.hasImage ? '!p-0 overflow-hidden' : ''}`}>
                                 {service.icon}
                             </div>
                             <div className="service-body">
