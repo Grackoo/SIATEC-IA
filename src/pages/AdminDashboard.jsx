@@ -116,8 +116,12 @@ export default function AdminDashboard() {
         if (formData.category === 'software') {
             specsJson.condition = formData.condition || 'licencia';
         }
+
+        // Destructuramos para no enviar 'condition' como columna a Supabase
+        const { condition, ...restFormData } = formData;
+
         const productData = {
-            ...formData,
+            ...restFormData,
             price: parseFloat(formData.price),
             stock: parseInt(formData.stock),
             specs: specsJson,
