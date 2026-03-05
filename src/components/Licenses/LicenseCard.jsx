@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import ImageCarousel from '../Shop/ImageCarousel';
 
 export default function LicenseCard({ product }) {
     const { addItem } = useCart();
@@ -8,9 +9,6 @@ export default function LicenseCard({ product }) {
     const handleAddToCart = () => {
         addItem(product);
     };
-
-    // Helper to get image
-    const image = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
 
     // Helper to get features list from specs if available
     // Check if specsRaw exists and has features array, otherwise default to empty
@@ -20,10 +18,8 @@ export default function LicenseCard({ product }) {
 
     return (
         <div className="license-card">
-            {/* License Image */}
-            <div className="license-image-container">
-                <img src={image || 'https://via.placeholder.com/300?text=Software'} alt={product.name} className="license-image" />
-            </div>
+            {/* Image Carousel */}
+            <ImageCarousel images={product.images} alt={product.name} />
 
             {/* License Info */}
             <div className="license-content">
