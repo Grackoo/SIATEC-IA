@@ -81,9 +81,23 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="mobile-menu">
+        {/* Mobile Menu Backdrop */}
+        <div className={`mobile-menu-backdrop ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+        {/* Mobile Menu Overlay */}
+        <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
+          <div className="mobile-menu-header">
+            <span className="mobile-menu-title">Menú de Navegación</span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="btn btn-icon mobile-menu-close"
+              aria-label="Close menu"
+            >
+              <X size={28} />
+            </button>
+          </div>
+
+          <div className="mobile-nav-container">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -95,7 +109,20 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-        )}
+
+          <div className="mobile-menu-footer">
+            <button
+              onClick={() => {
+                openCustomerSupport();
+                setIsMobileMenuOpen(false);
+              }}
+              className="btn btn-whatsapp w-full justify-center"
+            >
+              <MessageCircle size={20} />
+              <span>Contactar Soporte</span>
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
   );

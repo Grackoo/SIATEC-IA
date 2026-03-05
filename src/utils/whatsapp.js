@@ -72,7 +72,7 @@ export function sendLicenseOrderToWhatsApp(licenses) {
  * @param {Object} appointmentData - Appointment details
  */
 export function sendAppointmentToWhatsApp(appointmentData) {
-  const { name, phone, email, deviceType, problem, date, time, serviceType } = appointmentData;
+  const { name, phone, email, deviceType, problem, serviceType } = appointmentData;
 
   let message = '🔧 *Solicitud de Cita - Reparación*\n\n';
   message += `*Datos del Cliente:*\n`;
@@ -86,12 +86,10 @@ export function sendAppointmentToWhatsApp(appointmentData) {
     message += `Tipo de Equipo: ${deviceType}\n`;
   }
   if (serviceType) {
-    message += `Servicio: ${serviceType}\n`;
+    message += `Servicio Principal: ${serviceType}\n`;
   }
-  message += `Problema: ${problem}\n`;
-  message += `\n*Fecha y Hora Preferida:*\n`;
-  message += `${date} a las ${time}\n\n`;
-  message += '¿Pueden confirmar mi cita?';
+  message += `Problema/Detalles: ${problem}\n\n`;
+  message += 'Me gustaría coordinar una cita. ¿Qué horarios tienen disponibles?';
 
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
