@@ -358,8 +358,8 @@ export default function AdminDashboard() {
                                                                 </td>
                                                                 {(category === 'laptop' || category === 'software') && (
                                                                     <td className="p-1.5">
-                                                                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium border ${item.specs?.condition === 'Nueva' || item.specs?.condition === 'Antivirus' ? 'bg-green-500/10 border-green-500/20 text-green-400' : item.specs?.condition === 'Paquetería' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-orange-500/10 border-orange-500/20 text-orange-400'}`}>
-                                                                            {item.specs?.condition || (category === 'laptop' ? 'Reacondicionada' : 'Antivirus')}
+                                                                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium border ${item.specs?.condition === 'Nueva' || item.specs?.condition === 'Antivirus' ? 'bg-green-500/10 border-green-500/20 text-green-400' : item.specs?.condition === 'Paquetería' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : item.specs?.condition === 'Software' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-orange-500/10 border-orange-500/20 text-orange-400'}`}>
+                                                                            {item.specs?.condition || (category === 'laptop' ? 'Reacondicionada' : 'Software')}
                                                                         </span>
                                                                     </td>
                                                                 )}
@@ -526,7 +526,7 @@ export default function AdminDashboard() {
 
                                     {formData.category === 'software' && (
                                         <div className="space-y-2 md:col-span-2">
-                                            <label className="text-sm text-gray-400 font-medium">Tipo de Licencia</label>
+                                            <label className="text-sm text-gray-400 font-medium">Tipo de Licencia/Software</label>
                                             <div className="flex gap-4">
                                                 <label className={`flex-1 cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.condition === 'Antivirus' ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
                                                     <input type="radio" name="condition" value="Antivirus" checked={formData.condition === 'Antivirus'} onChange={handleInputChange} className="hidden" />
@@ -535,6 +535,10 @@ export default function AdminDashboard() {
                                                 <label className={`flex-1 cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.condition === 'Paquetería' ? 'bg-purple-500/10 border-purple-500 text-purple-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
                                                     <input type="radio" name="condition" value="Paquetería" checked={formData.condition === 'Paquetería'} onChange={handleInputChange} className="hidden" />
                                                     Paquetería
+                                                </label>
+                                                <label className={`flex-1 cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.condition === 'Software' ? 'bg-blue-500/10 border-blue-500 text-blue-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
+                                                    <input type="radio" name="condition" value="Software" checked={formData.condition === 'Software'} onChange={handleInputChange} className="hidden" />
+                                                    Software
                                                 </label>
                                             </div>
                                         </div>
