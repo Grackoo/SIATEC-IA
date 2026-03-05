@@ -55,14 +55,14 @@
   --transition-base: 250ms ease-in-out;
   --transition-slow: 400ms ease-in-out;
 
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
+  /* Spacing - Scaled down for mobile */
+  --spacing-xs: clamp(0.125rem, 1vw, 0.25rem);
+  --spacing-sm: clamp(0.25rem, 2vw, 0.5rem);
+  --spacing-md: clamp(0.75rem, 3vw, 1rem);
+  --spacing-lg: clamp(1rem, 4vw, 1.5rem);
+  --spacing-xl: clamp(1.5rem, 5vw, 2rem);
+  --spacing-2xl: clamp(2rem, 6vw, 3rem);
+  --spacing-3xl: clamp(2.5rem, 8vw, 4rem);
 
   /* Border Radius */
   --radius-sm: 4px;
@@ -146,13 +146,22 @@ a:hover {
   width: 100%;
   max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
+  padding: 0 var(--spacing-md);
+  /* Reduced from lg on mobile */
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
 }
 
 /* === BUTTONS === */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  /* Center content, critical for mobile full-width */
   gap: var(--spacing-sm);
   padding: var(--spacing-md) var(--spacing-xl);
   font-size: 1rem;
@@ -165,6 +174,9 @@ a:hover {
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  min-height: 48px;
+  /* Touch target minimum height */
+  touch-action: manipulation;
 }
 
 .btn::before {
@@ -372,6 +384,75 @@ a:hover {
 
 .grid-2 {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* === HERO SECTION === */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--spacing-2xl) 0;
+}
+
+.hero-content {
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 var(--spacing-md);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-md);
+  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xl);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* Stack on mobile */
+  width: 100%;
+}
+
+.hero-buttons .btn {
+  width: 100%;
+  /* Full width on mobile */
+  max-width: 300px;
+  /* Cap width so it doesn't look ridiculous */
+}
+
+@media (min-width: 640px) {
+  .hero-buttons {
+    flex-direction: row;
+    /* Side-by-side on larger screens */
+    width: auto;
+  }
+
+  .hero-buttons .btn {
+    width: auto;
+  }
 }
 
 .grid-3 {
@@ -650,11 +731,42 @@ img {
   margin-bottom: var(--spacing-sm);
 }
 
+/* === FEATURES GRID === */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* 1 column on mobile */
+  gap: var(--spacing-xl);
+  margin-top: calc(var(--spacing-2xl) * -1);
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns on tablet/desktop */
+  }
+}
+
 .streaming-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
+  /* 1 column on mobile */
   gap: var(--spacing-xl);
   margin-bottom: var(--spacing-3xl);
+}
+
+@media (min-width: 640px) {
+  .streaming-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .streaming-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
 }
 
 .service-card {
@@ -666,6 +778,15 @@ img {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+@media (max-width: 767px) {
+  .feature-card {
+    padding: var(--spacing-md);
+    /* Less padding on mobile */
+    align-items: center;
+    text-align: center;
+  }
 }
 
 .service-card:hover {
