@@ -551,26 +551,48 @@
 }
 
 .product-info {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    /* Reduced padding for mobile */
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
     flex: 1;
 }
 
+@media (min-width: 640px) {
+    .product-info {
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+}
+
 .product-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
+    /* Smaller font on mobile */
     margin: 0;
     color: var(--text-primary);
     font-weight: 600;
 }
 
+@media (min-width: 640px) {
+    .product-name {
+        font-size: 1.25rem;
+    }
+}
+
 .product-specs {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+    display: none;
+    /* Hide specs on mobile to save vertical space */
+}
+
+@media (min-width: 640px) {
+    .product-specs {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
 }
 
 .product-specs p {
@@ -580,12 +602,22 @@
 
 .product-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--spacing-md);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
     margin-top: auto;
-    padding-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
     border-top: 1px solid var(--border-color);
+}
+
+@media (min-width: 640px) {
+    .product-footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
 }
 
 .product-price {
@@ -734,11 +766,18 @@
 }
 
 .license-content {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
     flex: 1;
+}
+
+@media (min-width: 640px) {
+    .license-content {
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
 }
 
 .license-type-badge {
@@ -746,10 +785,16 @@
 }
 
 .license-name {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     margin: 0;
     color: var(--text-primary);
     font-weight: 700;
+}
+
+@media (min-width: 640px) {
+    .license-name {
+        font-size: 1.5rem;
+    }
 }
 
 .license-description {
@@ -784,17 +829,21 @@
 
 .license-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--spacing-md);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
     margin-top: auto;
-    padding-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
 }
 
-.license-price {
-    display: flex;
-    align-items: baseline;
-    gap: var(--spacing-xs);
+@media (min-width: 640px) {
+    .license-footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
 }
 
 .price-currency {
@@ -920,8 +969,17 @@
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-xl);
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns on mobile */
+    gap: var(--spacing-md);
+    /* Reduced gap */
+}
+
+@media (min-width: 640px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--spacing-xl);
+    }
 }
 
 .cta {
@@ -949,38 +1007,6 @@
 @media (max-width: 768px) {
     .home .hero {
         padding: var(--spacing-2xl) 0;
-    }
-
-    .products-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-    }
-
-    .product-footer {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .product-footer .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .license-footer {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .license-price {
-        justify-content: center;
-    }
-
-    .license-footer .btn {
-        width: 100%;
-        justify-content: center;
     }
 }
 
@@ -1055,8 +1081,16 @@
 
 .licenses-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-2xl);
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns on mobile */
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+    .licenses-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--spacing-2xl);
+    }
 }
 
 .info-section {
