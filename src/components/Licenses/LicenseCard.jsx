@@ -13,7 +13,7 @@ export default function LicenseCard({ product }) {
     // Helper to get features list from specs if available
     // Check if specsRaw exists and has features array, otherwise default to empty
     const features = product.specsRaw?.features || [];
-    const type = product.specsRaw?.type || 'Software';
+    const type = product.specsRaw?.condition || product.specsRaw?.type || 'Software';
     const description = product.specsRaw?.description || product.category;
 
     return (
