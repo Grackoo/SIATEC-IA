@@ -11,13 +11,32 @@ export default function Navbar() {
   const cartItemCount = getTotalItems();
 
   const navLinks = [
-    { path: '#inicio', label: 'Inicio' },
-    { path: '#licencias', label: 'Licencias' },
-    { path: '#reparacion', label: 'Reparación' },
-    { path: '#streaming', label: 'Streaming' },
+    { id: 'inicio', label: 'Inicio' },
+    { id: 'licencias', label: 'Licencias' },
+    { id: 'reparacion', label: 'Reparación' },
+    { id: 'streaming', label: 'Streaming' },
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const scrollToSection = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      // If we're not on the main page (e.g., admin), we might need to navigate first, 
+      // but assuming the user is on the main page for these links.
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false);
+    } else {
+      // If element not found, we might be on a different route like /gestion_interna. 
+      // Fallback: window.location.hash = '/' then scroll, but for now just navigate to home
+      window.location.hash = '#/';
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
+  const isActive = (path) => false; // Disabled active styling for now
 
   return (
     <nav className="navbar">
@@ -37,9 +56,10 @@ export default function Navbar() {
           <div className="navbar-links desktop-only">
             {navLinks.map((link) => (
               <a
-                key={link.path}
-                href={link.path}
-                className="nav-link"
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={(e) => scrollToSection(e, link.id)}
+                className="nav-link cursor-pointer"
               >
                 {link.label}
               </a>
@@ -100,10 +120,10 @@ export default function Navbar() {
           <div className="mobile-nav-container">
             {navLinks.map((link) => (
               <a
-                key={link.path}
-                href={link.path}
-                className="mobile-nav-link"
-                onClick={() => setIsMobileMenuOpen(false)}
+                key={link.id}
+                href={`#${link.id}`}
+                className="mobile-nav-link cursor-pointer"
+                onClick={(e) => scrollToSection(e, link.id)}
               >
                 {link.label}
               </a>
