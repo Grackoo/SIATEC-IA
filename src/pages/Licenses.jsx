@@ -6,10 +6,9 @@ import { useProducts } from '../context/ProductsContext';
 export default function Licenses() {
     const { products, loading } = useProducts();
 
-    // 1. Loading State
     if (loading) {
         return (
-            <div className="licenses-page min-h-screen flex items-center justify-center">
+            <div className="licenses-page py-12 flex items-center justify-center">
                 <div className="text-xl text-gray-400 animate-pulse">Cargando catálogo de software...</div>
             </div>
         );

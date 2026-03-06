@@ -11,10 +11,10 @@ export default function Navbar() {
   const cartItemCount = getTotalItems();
 
   const navLinks = [
-    { path: '/', label: 'Inicio' },
-    { path: '/licenses', label: 'Licencias' },
-    { path: '/appointment', label: 'Reparación' },
-    { path: '/streaming', label: 'Streaming' },
+    { path: '#inicio', label: 'Inicio' },
+    { path: '#licencias', label: 'Licencias' },
+    { path: '#reparacion', label: 'Reparación' },
+    { path: '#streaming', label: 'Streaming' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -36,13 +36,13 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="navbar-links desktop-only">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.path}
-                to={link.path}
-                className={`nav-link ${isActive(link.path) ? 'active' : ''}`}
+                href={link.path}
+                className="nav-link"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -99,14 +99,14 @@ export default function Navbar() {
 
           <div className="mobile-nav-container">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.path}
-                to={link.path}
-                className={`mobile-nav-link ${isActive(link.path) ? 'active' : ''}`}
+                href={link.path}
+                className="mobile-nav-link"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
 

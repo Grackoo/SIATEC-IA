@@ -21,6 +21,27 @@ import AdminDashboard from './pages/AdminDashboard'; // Import Admin Dashboard
 // Estilos globales
 import './index.css';
 
+// Define a MainPage component that combines all sections
+function MainPage() {
+  return (
+    <div className="single-page-wrapper">
+      {/* Each section gets an ID so we can scroll to it */}
+      <div id="inicio">
+        <Home />
+      </div>
+      <div id="licencias" className="section-divider">
+        <Licenses />
+      </div>
+      <div id="reparacion" className="section-divider">
+        <Appointment />
+      </div>
+      <div id="streaming" className="section-divider">
+        <Streaming />
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <ProductsProvider>
@@ -30,10 +51,9 @@ function App() {
             <Navbar />
             <main>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/licenses" element={<Licenses />} />
-                <Route path="/appointment" element={<Appointment />} />
-                <Route path="/streaming" element={<Streaming />} />
+                {/* Single unified page route */}
+                <Route path="/" element={<MainPage />} />
+                {/* Keep admin route separate */}
                 <Route path="/gestion_interna" element={<AdminDashboard />} />
               </Routes>
             </main>

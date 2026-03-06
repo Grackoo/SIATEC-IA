@@ -96,6 +96,18 @@ body {
   overflow-x: hidden;
 }
 
+/* === SINGLE PAGE DIVIDERS === */
+.section-divider {
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--spacing-3xl);
+  margin-top: var(--spacing-3xl);
+  background: var(--bg-dark);
+}
+
+.section-divider:nth-child(even) {
+  background: var(--bg-darkest);
+}
+
 /* === TYPOGRAPHY === */
 h1,
 h2,
