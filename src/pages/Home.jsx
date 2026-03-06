@@ -7,6 +7,14 @@ import { useProducts } from '../context/ProductsContext';
 export default function Home() {
     const { products } = useProducts();
 
+    const scrollToSection = (e, id) => {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="home">
             {/* Hero Section */}
@@ -27,13 +35,13 @@ export default function Home() {
                             Venta y Reparación de Equipos de Cómputo con Garantía y Eficiencia
                         </p>
                         <div className="hero-buttons">
-                            <a href="#laptops" className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
+                            <button onClick={(e) => scrollToSection(e, 'laptops')} className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
                                 <Laptop size={24} />
                                 Explorar Laptops
-                            </a>
-                            <Link to="/appointment" className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
+                            </button>
+                            <button onClick={(e) => scrollToSection(e, 'reparacion')} className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
                                 Solicitar Reparación
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>
