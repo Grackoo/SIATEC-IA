@@ -808,11 +808,18 @@ img {
 }
 
 .service-header {
-  height: 160px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-sm);
+}
+
+@media (min-width: 640px) {
+  .service-header {
+    height: 160px;
+    padding: var(--spacing-lg);
+  }
 }
 
 /* Service Colors */
@@ -848,12 +855,18 @@ img {
 
 .service-icon-text {
   font-weight: 800;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
+@media (min-width: 640px) {
+  .service-icon-text {
+    font-size: 2.5rem;
+  }
+}
+
 .service-body {
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   text-align: center;
   flex: 1;
   display: flex;
