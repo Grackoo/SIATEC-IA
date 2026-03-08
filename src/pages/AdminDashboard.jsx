@@ -38,7 +38,7 @@ export default function AdminDashboard() {
         almacenamiento: '',
         display: '',
         gpu: '',
-        os: ''
+        sistema_operativo: ''
     });
 
     useEffect(() => {
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                     almacenamiento: product.specs?.almacenamiento || '',
                     display: product.specs?.display || '',
                     gpu: product.specs?.gpu || '',
-                    os: product.specs?.os || ''
+                    sistema_operativo: product.specs?.sistema_operativo || ''
                 });
             } else {
                 setEditingProduct(null);
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
                     almacenamiento: '',
                     display: '',
                     gpu: '',
-                    os: ''
+                    sistema_operativo: ''
                 });
             }
         }
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
                 almacenamiento: formData.almacenamiento,
                 display: formData.display,
                 gpu: formData.gpu,
-                os: formData.os
+                sistema_operativo: formData.sistema_operativo
             };
         } else {
             // Parse manual JSON for other categories
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
         }
 
         // Destructuramos los campos temporales del formulario para no enviarlos como columnas directas
-        const { condition, gama, procesador, ram, almacenamiento, display, gpu, os, is_promotion, discount_percentage, ...restFormData } = formData;
+        const { condition, gama, procesador, ram, almacenamiento, display, gpu, sistema_operativo, is_promotion, discount_percentage, ...restFormData } = formData;
 
         const productData = {
             ...restFormData,
@@ -682,7 +682,7 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="space-y-2 md:col-span-2">
                                                 <label className="text-sm text-gray-400 font-medium">Sistema Operativo</label>
-                                                <input required name="os" value={formData.os} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. Windows 11 Pro" />
+                                                <input required name="sistema_operativo" value={formData.sistema_operativo} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. Windows 11 Pro" />
                                             </div>
                                         </div>
                                     </div>
