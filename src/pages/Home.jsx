@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Laptop, Zap, CheckCircle } from 'lucide-react';
+import { Laptop, Zap, CheckCircle, Tag } from 'lucide-react';
 import ProductCard from '../components/Shop/ProductCard';
 import { useProducts } from '../context/ProductsContext';
 
 export default function Home() {
     const { products } = useProducts();
+
+    // Filtramos los productos que están en promoción
+    const promotionalProducts = products.filter(product => product.is_promotion);
 
     const scrollToSection = (e, id) => {
         e.preventDefault();
@@ -75,6 +78,28 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Promotions Section */}
+            {promotionalProducts.length > 0 && (
+                <section id="promociones" className="products section bg-[#181818]">
+                    <div className="container">
+                        <div className="section-header">
+                            <div className="flex items-center justify-center gap-3 mb-2">
+                                <Tag className="text-red-500" size={32} />
+                                <h2 className="section-title text-red-500 mb-0 !pb-0">Ofertas Especiales</h2>
+                            </div>
+                            <p className="section-description">
+                                Aprovecha nuestros mejores descuentos por tiempo limitado
+                            </p>
+                        </div>
+                        <div className="products-grid">
+                            {promotionalProducts.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Products Section */}
             <section id="laptops" className="products section">

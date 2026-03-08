@@ -28,7 +28,17 @@ export default function AdminDashboard() {
         image_url: '',
         images: [],
         specs: '{}',
-        condition: 'Reacondicionada'
+        condition: 'Reacondicionada',
+        is_promotion: false,
+        discount_percentage: '',
+        // Laptop Specific
+        gama: 'Media',
+        procesador: '',
+        ram: '',
+        almacenamiento: '',
+        display: '',
+        gpu: '',
+        os: ''
     });
 
     useEffect(() => {
@@ -60,8 +70,11 @@ export default function AdminDashboard() {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     };
 
     const handleSpecsChange = (e) => {
@@ -81,7 +94,16 @@ export default function AdminDashboard() {
                     image_url: product.image_url || '',
                     images: product.images || (product.image_url ? [product.image_url] : []),
                     specs: JSON.stringify(product.specs, null, 2),
-                    condition: product.specs?.condition || 'Reacondicionada'
+                    condition: product.specs?.condition || 'Reacondicionada',
+                    is_promotion: product.is_promotion || false,
+                    discount_percentage: product.discount_percentage || '',
+                    gama: product.specs?.gama || 'Media',
+                    procesador: product.specs?.procesador || '',
+                    ram: product.specs?.ram || '',
+                    almacenamiento: product.specs?.almacenamiento || '',
+                    display: product.specs?.display || '',
+                    gpu: product.specs?.gpu || '',
+                    os: product.specs?.os || ''
                 });
             } else {
                 setEditingProduct(null);
@@ -93,7 +115,16 @@ export default function AdminDashboard() {
                     image_url: '',
                     images: [],
                     specs: '{}',
-                    condition: 'Reacondicionada'
+                    condition: 'Reacondicionada',
+                    is_promotion: false,
+                    discount_percentage: '',
+                    gama: 'Media',
+                    procesador: '',
+                    ram: '',
+                    almacenamiento: '',
+                    display: '',
+                    gpu: '',
+                    os: ''
                 });
             }
         }
@@ -103,29 +134,42 @@ export default function AdminDashboard() {
         e.preventDefault();
 
         let specsJson = {};
-        try {
-            specsJson = JSON.parse(formData.specs);
-        } catch (err) {
-            alert("El formato de Specs debe ser JSON válido. Ejemplo: {\"ram\": \"16GB\"}");
-            return;
-        }
 
         if (formData.category === 'laptop') {
-            specsJson.condition = formData.condition || 'Reacondicionada';
-        }
-        if (formData.category === 'software') {
-            specsJson.condition = formData.condition || 'Antivirus';
+            // Build specs from individual fields
+            specsJson = {
+                condition: formData.condition || 'Reacondicionada',
+                gama: formData.gama,
+                procesador: formData.procesador,
+                ram: formData.ram,
+                almacenamiento: formData.almacenamiento,
+                display: formData.display,
+                gpu: formData.gpu,
+                os: formData.os
+            };
+        } else {
+            // Parse manual JSON for other categories
+            try {
+                specsJson = JSON.parse(formData.specs);
+            } catch (err) {
+                alert("El formato de Specs debe ser JSON válido. Ejemplo: {\"ram\": \"16GB\"}");
+                return;
+            }
+            if (formData.category === 'software') {
+                specsJson.condition = formData.condition || 'Antivirus';
+            }
         }
 
-        // Destructuramos para no enviar 'condition' como columna a Supabase
-        const { condition, ...restFormData } = formData;
+        // Destructuramos los campos temporales del formulario para no enviarlos como columnas directas
+        const { condition, gama, procesador, ram, almacenamiento, display, gpu, os, ...restFormData } = formData;
 
         const productData = {
             ...restFormData,
             price: parseFloat(formData.price),
             stock: parseInt(formData.stock),
             specs: specsJson,
-            image_url: formData.images.length > 0 ? formData.images[0] : null
+            image_url: formData.images.length > 0 ? formData.images[0] : null,
+            discount_percentage: formData.is_promotion ? parseInt(formData.discount_percentage) || 0 : null
         };
 
         try {
@@ -575,18 +619,84 @@ export default function AdminDashboard() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm text-gray-400 font-medium flex justify-between">
-                                        Especificaciones Técnicas (JSON)
-                                        <a href="#" className="text-xs text-cyan-500 hover:underline">Ver ejemplos</a>
-                                    </label>
-                                    <textarea
-                                        name="specs"
-                                        value={formData.specs}
-                                        onChange={handleSpecsChange}
-                                        className="w-full bg-[#121212] border border-white/10 rounded-lg p-4 text-sm font-mono text-gray-300 focus:border-cyan-500/50 focus:outline-none transition-all h-32 leading-relaxed"
-                                        placeholder='{ "procesador": "Intel Core i5", "ram": "16GB" }'
-                                    />
+                                    <label className="text-sm text-gray-400 font-medium">¿Es promoción?</label>
+                                    <div className="flex items-center gap-4">
+                                        <label className={`cursor-pointer border rounded-lg p-3 flex items-center justify-center gap-2 transition-all ${formData.is_promotion ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400' : 'border-white/10 hover:bg-white/5 text-gray-400'}`}>
+                                            <input type="checkbox" name="is_promotion" checked={formData.is_promotion} onChange={handleInputChange} className="hidden" />
+                                            {formData.is_promotion ? 'Sí, es promoción' : 'No'}
+                                        </label>
+
+                                        {formData.is_promotion && (
+                                            <div className="flex-1 relative">
+                                                <input required={formData.is_promotion} type="number" name="discount_percentage" value={formData.discount_percentage} onChange={handleInputChange}
+                                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyan-500/50 focus:outline-none transition-all font-mono"
+                                                    placeholder="Porcentaje de descuento ej. 15"
+                                                    min="1" max="99"
+                                                />
+                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+
+                                {formData.category === 'laptop' ? (
+                                    <div className="space-y-4 border-t border-white/10 pt-4">
+                                        <h3 className="text-lg font-bold text-white mb-2">Especificaciones de Hardware</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">Gama</label>
+                                                <div className="relative">
+                                                    <select name="gama" value={formData.gama} onChange={handleInputChange}
+                                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white appearance-none focus:border-cyan-500/50 focus:outline-none transition-all cursor-pointer"
+                                                    >
+                                                        <option value="Baja">Baja</option>
+                                                        <option value="Media">Media</option>
+                                                        <option value="Alta">Alta</option>
+                                                    </select>
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">▼</div>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">Procesador</label>
+                                                <input required name="procesador" value={formData.procesador} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. Intel Core i5 11va Gen" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">RAM</label>
+                                                <input required name="ram" value={formData.ram} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. 16GB" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">Almacenamiento</label>
+                                                <input required name="almacenamiento" value={formData.almacenamiento} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. 512GB SSD NVMe" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">Display (Pantalla)</label>
+                                                <input required name="display" value={formData.display} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. 15.6' FHD IPS" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm text-gray-400 font-medium">Gráfica / GPU</label>
+                                                <input required name="gpu" value={formData.gpu} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. Intel Iris Xe" />
+                                            </div>
+                                            <div className="space-y-2 md:col-span-2">
+                                                <label className="text-sm text-gray-400 font-medium">Sistema Operativo</label>
+                                                <input required name="os" value={formData.os} onChange={handleInputChange} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-500/50 focus:outline-none transition-all" placeholder="ej. Windows 11 Pro" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2 border-t border-white/10 pt-4">
+                                        <label className="text-sm text-gray-400 font-medium flex justify-between">
+                                            Especificaciones Técnicas (JSON)
+                                            <a href="#" className="text-xs text-cyan-500 hover:underline">Ver ejemplos</a>
+                                        </label>
+                                        <textarea
+                                            name="specs"
+                                            value={formData.specs}
+                                            onChange={handleSpecsChange}
+                                            className="w-full bg-[#121212] border border-white/10 rounded-lg p-4 text-sm font-mono text-gray-300 focus:border-cyan-500/50 focus:outline-none transition-all h-32 leading-relaxed"
+                                            placeholder='{ "descripcion": "Licencia Original" }'
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="pt-6 border-t border-white/10 flex justify-end gap-3">
                                     <button type="button" onClick={() => handleViewSwitch('list')} className="px-6 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">
