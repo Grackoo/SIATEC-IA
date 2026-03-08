@@ -604,7 +604,7 @@
 }
 
 .condition-badge span {
-    background-color: rgba(31, 41, 55, 0.8);
+    background-color: #aa0000;
     backdrop-filter: blur(4px);
     color: white;
     font-size: 10px;
