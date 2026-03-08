@@ -32,14 +32,14 @@ export default function Home() {
                     <div className="hero-overlay"></div>
                 </div>
                 <div className="container relative z-10">
-                    <div className="hero-content text-white">
+                    <div className="hero-content text-white" data-aos="fade-up">
                         <h1 className="hero-title text-white drop-shadow-lg" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.8)' }}>
                             Soluciones Informáticas Avanzadas
                         </h1>
-                        <p className="hero-subtitle text-white drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+                        <p className="hero-subtitle text-white drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }} data-aos="fade-up" data-aos-delay="200">
                             Venta y Reparación de Equipos de Cómputo con Garantía y Eficiencia
                         </p>
-                        <div className="hero-buttons">
+                        <div className="hero-buttons" data-aos="fade-up" data-aos-delay="400">
                             <button onClick={(e) => scrollToSection(e, 'laptops')} className="btn btn-glass btn-lg text-white border-white hover:bg-white hover:text-black" style={{ textShadow: 'none' }}>
                                 <Laptop size={24} />
                                 Explorar Laptops
@@ -56,21 +56,21 @@ export default function Home() {
             <section className="features section">
                 <div className="container">
                     <div className="features-grid">
-                        <div className="feature-card">
+                        <div className="feature-card" data-aos="fade-up" data-aos-delay="100">
                             <div className="feature-icon">
                                 <Laptop size={40} />
                             </div>
                             <h3>Laptops de Calidad</h3>
                             <p>Equipos nuevos y reacondicionados con garantía certificada</p>
                         </div>
-                        <div className="feature-card">
+                        <div className="feature-card" data-aos="fade-up" data-aos-delay="200">
                             <div className="feature-icon">
                                 <Zap size={40} />
                             </div>
                             <h3>Reparación Experta</h3>
                             <p>Técnicos certificados para todo tipo de reparaciones</p>
                         </div>
-                        <div className="feature-card">
+                        <div className="feature-card" data-aos="fade-up" data-aos-delay="300">
                             <div className="feature-icon">
                                 <CheckCircle size={40} />
                             </div>
@@ -85,7 +85,7 @@ export default function Home() {
             {promotionalProducts.length > 0 && (
                 <section id="promociones" className="products section bg-dark-section">
                     <div className="container">
-                        <div className="section-header">
+                        <div className="section-header" data-aos="fade-up">
                             <div className="promotions-header">
                                 <h2 className="section-title text-white-title">Ofertas Exclusivas 🔥</h2>
                             </div>
@@ -132,7 +132,7 @@ export default function Home() {
             {/* Products Section */}
             <section id="laptops" className="products section">
                 <div className="container">
-                    <div className="section-header">
+                    <div className="section-header" data-aos="fade-up">
                         <h2 className="section-title">Nuestras Laptops</h2>
                         <p className="section-description">
                             Encuentra el equipo perfecto para tus necesidades
@@ -151,7 +151,7 @@ export default function Home() {
             {/* CTA Section */}
             <section className="cta section">
                 <div className="container">
-                    <div className="cta-content">
+                    <div className="cta-content" data-aos="zoom-in">
                         <h2>¿No encuentras lo que buscas?</h2>
                         <p>Contáctanos y te ayudaremos a encontrar el equipo ideal</p>
                         <button onClick={() => window.open('https://wa.me/527713951347', '_blank')} className="btn btn-primary btn-lg">

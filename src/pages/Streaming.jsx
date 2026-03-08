@@ -62,7 +62,7 @@ export default function Streaming() {
     return (
         <div className="streaming-page section">
             <div className="container">
-                <header className="streaming-header">
+                <header className="streaming-header" data-aos="fade-up">
                     <h1>Cuentas de Streaming</h1>
                     <p style={{ maxWidth: '600px', margin: '0 auto' }}>
                         Disfruta del mejor entretenimiento con nuestras cuentas premium garantizadas.
@@ -72,15 +72,17 @@ export default function Streaming() {
                 </header>
 
                 <div className="streaming-grid">
-                    {streamingServices.map((service) => (
-                        <StreamingCard key={service.id} service={service} />
+                    {streamingServices.map((service, index) => (
+                        <div key={service.id} data-aos="fade-up" data-aos-delay={index * 100}>
+                            <StreamingCard service={service} />
+                        </div>
                     ))}
                 </div>
 
                 <div className="guarantee-section">
-                    <h2 className="text-center" style={{ marginBottom: '2rem' }}>¿Por qué elegir nuestro servicio?</h2>
+                    <h2 className="text-center" style={{ marginBottom: '2rem' }} data-aos="fade-up">¿Por qué elegir nuestro servicio?</h2>
                     <div className="guarantee-grid">
-                        <div className="guarantee-item">
+                        <div className="guarantee-item" data-aos="fade-up" data-aos-delay="100">
                             <div className="guarantee-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -89,7 +91,7 @@ export default function Streaming() {
                             <h3 className="guarantee-title">Garantía Total</h3>
                             <p className="guarantee-text">Ofrecemos soporte y reposición en caso de cualquier inconveniente durante tu suscripción.</p>
                         </div>
-                        <div className="guarantee-item">
+                        <div className="guarantee-item" data-aos="fade-up" data-aos-delay="200">
                             <div className="guarantee-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -98,7 +100,7 @@ export default function Streaming() {
                             <h3 className="guarantee-title">Entrega Inmediata</h3>
                             <p className="guarantee-text">Recibe tus accesos minutos después de confirmar tu pago vía WhatsApp.</p>
                         </div>
-                        <div className="guarantee-item">
+                        <div className="guarantee-item" data-aos="fade-up" data-aos-delay="300">
                             <div className="guarantee-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

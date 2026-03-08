@@ -69,7 +69,7 @@ export default function Appointment() {
             {/* Header */}
             <section className="page-header appointment-header">
                 <div className="container">
-                    <div className="header-content style-center">
+                    <div className="header-content style-center" data-aos="fade-up">
                         <div className="header-icon-container">
                             <Wrench size={40} className="header-icon-svg" />
                         </div>
@@ -82,7 +82,7 @@ export default function Appointment() {
             {/* Form Section */}
             <section className="form-section section pt-0">
                 <div className="container" style={{ maxWidth: '800px' }}>
-                    <form onSubmit={handleSubmit} className="appointment-form card-style">
+                    <form onSubmit={handleSubmit} className="appointment-form card-style" data-aos="zoom-in" data-aos-delay="200">
 
                         {/* Dynamic Background Blur */}
                         <div className="glow-bg"></div>

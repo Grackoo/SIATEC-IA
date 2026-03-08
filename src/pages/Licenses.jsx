@@ -39,7 +39,7 @@ export default function Licenses() {
             {/* Header */}
             <section className="page-header">
                 <div className="container">
-                    <div className="header-content">
+                    <div className="header-content" data-aos="fade-up">
                         <div className="header-icon">
                             <Key size={48} />
                         </div>
@@ -62,7 +62,7 @@ export default function Licenses() {
                             {/* Windows Section */}
                             {windowsLicenses.length > 0 && (
                                 <div>
-                                    <div className="section-title-group mb-8">
+                                    <div className="section-title-group mb-8" data-aos="fade-right">
                                         <AppWindow size={32} className="section-icon" />
                                         <div>
                                             <h2>Sistemas Operativos</h2>
@@ -70,8 +70,10 @@ export default function Licenses() {
                                         </div>
                                     </div>
                                     <div className="licenses-grid">
-                                        {windowsLicenses.map((product) => (
-                                            <LicenseCard key={product.id} product={product} />
+                                        {windowsLicenses.map((product, index) => (
+                                            <div key={product.id} data-aos="fade-up" data-aos-delay={index * 100}>
+                                                <LicenseCard product={product} />
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -80,7 +82,7 @@ export default function Licenses() {
                             {/* Antivirus Section */}
                             {antivirusLicenses.length > 0 && (
                                 <div>
-                                    <div className="section-title-group mb-8">
+                                    <div className="section-title-group mb-8" data-aos="fade-right">
                                         <Shield size={32} className="section-icon" />
                                         <div>
                                             <h2>Antivirus y Seguridad</h2>
@@ -88,8 +90,10 @@ export default function Licenses() {
                                         </div>
                                     </div>
                                     <div className="licenses-grid">
-                                        {antivirusLicenses.map((product) => (
-                                            <LicenseCard key={product.id} product={product} />
+                                        {antivirusLicenses.map((product, index) => (
+                                            <div key={product.id} data-aos="fade-up" data-aos-delay={index * 100}>
+                                                <LicenseCard product={product} />
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -98,7 +102,7 @@ export default function Licenses() {
                             {/* Other Software */}
                             {otherLicenses.length > 0 && (
                                 <div>
-                                    <div className="section-title-group mb-8">
+                                    <div className="section-title-group mb-8" data-aos="fade-right">
                                         <Package size={32} className="section-icon" />
                                         <div>
                                             <h2>Otros Programas</h2>
@@ -106,8 +110,10 @@ export default function Licenses() {
                                         </div>
                                     </div>
                                     <div className="licenses-grid">
-                                        {otherLicenses.map((product) => (
-                                            <LicenseCard key={product.id} product={product} />
+                                        {otherLicenses.map((product, index) => (
+                                            <div key={product.id} data-aos="fade-up" data-aos-delay={index * 100}>
+                                                <LicenseCard product={product} />
+                                            </div>
                                         ))}
                                     </div>
                                 </div>

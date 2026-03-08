@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // Usamos HashRouter para compatibilidad con GitHub Pages
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 // Importaciones de Contexto
 import { CartProvider } from './context/CartContext';
@@ -44,6 +46,14 @@ function MainPage() {
 }
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: 'ease-out-cubic',
+    });
+  }, []);
+
   return (
     <ProductsProvider>
       <CartProvider>
