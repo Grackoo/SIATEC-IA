@@ -81,11 +81,11 @@ export default function Home() {
 
             {/* Promotions Section */}
             {promotionalProducts.length > 0 && (
-                <section id="promociones" className="products section bg-[#181818]">
+                <section id="promociones" className="products section bg-dark-section">
                     <div className="container">
                         <div className="section-header">
-                            <div className="flex items-center justify-center gap-3 mb-2">
-                                <h2 className="section-title mb-0 !pb-0 text-white">Ofertas Exclusivas 🔥</h2>
+                            <div className="promotions-header">
+                                <h2 className="section-title text-white-title">Ofertas Exclusivas 🔥</h2>
                             </div>
                             <p className="section-description">
                                 Aprovecha nuestros mejores descuentos por tiempo limitado
