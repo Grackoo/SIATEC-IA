@@ -19,7 +19,28 @@ export default function LicenseCard({ product }) {
     return (
         <div className="license-card">
             {/* Image Carousel */}
-            <ImageCarousel images={product.images} alt={product.name} />
+            <div className="relative">
+                <ImageCarousel images={product.images} alt={product.name} />
+
+                {/* Promotions Badge */}
+                {product.is_promotion && product.discount_percentage && (
+                    <div className="promotion-badge">
+                        ¡{product.discount_percentage}% OFF!
+                    </div>
+                )}
+
+                {/* Price Pill Overlay */}
+                <div className="price-overlay !bottom-2 !right-0">
+                    {product.is_promotion && product.discount_percentage ? (
+                        <>
+                            <span className="price-old">${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            <span className="price-new">${(product.price * (1 - product.discount_percentage / 100)).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </>
+                    ) : (
+                        <span className="price-new">${product.price ? product.price.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
+                    )}
+                </div>
+            </div>
 
             {/* License Info */}
             <div className="license-content">
@@ -44,15 +65,11 @@ export default function LicenseCard({ product }) {
                     </ul>
                 )}
 
-                {/* Price and Action */}
-                <div className="license-footer mt-auto">
-                    <div className="license-price">
-                        <span className="price-value">${product.price.toLocaleString('es-MX')}</span>
-                        <span className="price-currency">MXN</span>
-                    </div>
-                    <button onClick={handleAddToCart} className="btn btn-primary text-sm px-3 py-2">
+                {/* Action - Hide Original Price Here since we show it overlaid */}
+                <div className="license-footer mt-auto pt-4">
+                    <button onClick={handleAddToCart} className="btn btn-primary text-sm px-3 py-2 w-full justify-center flex items-center gap-2">
                         <ShoppingCart size={18} />
-                        Agregar
+                        Agregar al Carrito
                     </button>
                 </div>
             </div>

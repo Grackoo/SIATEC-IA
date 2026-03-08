@@ -10,6 +10,7 @@ import { ProductsProvider } from './context/ProductsContext'; // <-- Esta es la 
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import ShoppingCart from './components/Cart/ShoppingCart';
+import FloatingActions from './components/Layout/FloatingActions';
 
 // Importaciones de Páginas
 import Home from './pages/Home';
@@ -59,6 +60,7 @@ function App() {
             </main>
             <Footer />
             <ShoppingCart />
+            <FloatingActions />
           </div>
         </Router>
       </CartProvider>

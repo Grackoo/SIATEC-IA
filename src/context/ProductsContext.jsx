@@ -18,7 +18,7 @@ export function ProductsProvider({ children }) {
     useEffect(() => {
         if (!supabaseLoading && inventory) {
             const mappedProducts = inventory
-                .filter(item => item.category === 'laptop' || item.category === 'software') // Filter relevant categories
+                .filter(item => item.category === 'laptop' || item.category === 'software' || item.category === 'streaming') // Include streaming
                 .map(item => ({
                     id: item.id,
                     name: item.title,

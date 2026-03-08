@@ -68,27 +68,8 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="navbar-actions">
-            {/* WhatsApp Support Button */}
-            <button
-              onClick={openCustomerSupport}
-              className="btn btn-sm whatsapp-btn"
-              title="Atención al Cliente"
-            >
-              <MessageCircle size={20} />
-              <span className="desktop-only-inline">Soporte</span>
-            </button>
-
-            {/* Cart Button */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="btn btn-icon cart-btn"
-              title="Ver Carrito"
-            >
-              <ShoppingCart size={20} />
-              {cartItemCount > 0 && (
-                <span className="cart-badge">{cartItemCount}</span>
-              )}
-            </button>
+            {/* WhatsApp Support Button - Removed */}
+            {/* Cart Button - Removed */}
 
             {/* Mobile Menu Toggle */}
             <button
@@ -130,18 +111,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mobile-menu-footer">
-            <button
-              onClick={() => {
-                openCustomerSupport();
-                setIsMobileMenuOpen(false);
-              }}
-              className="btn btn-whatsapp w-full justify-center"
-            >
-              <MessageCircle size={20} />
-              <span>Contactar Soporte</span>
-            </button>
-          </div>
+          {/* Mobile Menu Footer - Removed */}
         </div>
       </div>
     </nav>

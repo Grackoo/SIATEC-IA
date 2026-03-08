@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Laptop, Zap, CheckCircle, Tag } from 'lucide-react';
 import ProductCard from '../components/Shop/ProductCard';
+import LicenseCard from '../components/Licenses/LicenseCard';
+import StreamingCard from '../components/Shop/StreamingCard';
 import { useProducts } from '../context/ProductsContext';
 
 export default function Home() {
@@ -92,9 +94,36 @@ export default function Home() {
                             </p>
                         </div>
                         <div className="products-grid">
-                            {promotionalProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
+                            {promotionalProducts.map((product) => {
+                                if (product.category === 'laptop' || product.category === 'software') {
+                                    // Software uses LicenseCard
+                                    if (product.category === 'software') {
+                                        return <LicenseCard key={product.id} product={product} />
+                                    }
+                                    return <ProductCard key={product.id} product={product} />
+                                } else if (product.category === 'streaming') {
+                                    // Map to the format StreamingCard expects
+                                    // We need to pass it a `service` object
+                                    const service = {
+                                        id: product.id,
+                                        name: product.name,
+                                        icon: <span className="service-icon-text text-xl sm:text-2xl font-bold">{product.name.charAt(0)}</span>,
+                                        description: product.specsRaw?.description || product.category,
+                                        headerClass: 'bg-gray-800',
+                                        price: product.price,
+                                        hasImage: !!product.images?.[0] && !product.images[0].includes('placeholder'),
+                                        is_promotion: product.is_promotion,
+                                        discount_percentage: product.discount_percentage
+                                    };
+                                    // If it has image, set the icon to an img tag to match StreamingCard expectation
+                                    if (service.hasImage) {
+                                        service.icon = <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />;
+                                        service.headerClass = 'bg-[#121212]';
+                                    }
+                                    return <StreamingCard key={product.id} service={service} />
+                                }
+                                return null;
+                            })}
                         </div>
                     </div>
                 </section>

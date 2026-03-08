@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Play, Music, Wifi } from 'lucide-react';
 import { requestStreamingService } from '../utils/whatsapp';
 import { useSupabase } from '../context/SupabaseContext';
+import StreamingCard from '../components/Shop/StreamingCard';
 
 export default function Streaming() {
     const { inventory } = useSupabase();
@@ -43,7 +44,9 @@ export default function Streaming() {
                     description: item.specs?.description || 'Servicio de streaming premium.',
                     headerClass: hasImage ? 'bg-[#121212]' : template.headerClass,
                     price: item.price,
-                    hasImage
+                    hasImage,
+                    is_promotion: item.specs?.is_promotion || false,
+                    discount_percentage: item.specs?.discount_percentage || null
                 };
             });
             setStreamingServices(mappedServices);
@@ -70,23 +73,7 @@ export default function Streaming() {
 
                 <div className="streaming-grid">
                     {streamingServices.map((service) => (
-                        <div key={service.id} className="service-card">
-                            <div className={`service-header ${service.headerClass} ${service.hasImage ? '!p-0 overflow-hidden' : ''}`}>
-                                {service.icon}
-                            </div>
-                            <div className="service-body">
-                                <h3 className="service-title">{service.name}</h3>
-                                <p className="service-description">{service.description}</p>
-                                {service.price > 0 && <p className="text-xl font-bold mb-2">${service.price} MXN</p>}
-                                <button
-                                    onClick={() => requestStreamingService(service.name)}
-                                    className="btn btn-whatsapp"
-                                >
-                                    <Play size={18} fill="currentColor" />
-                                    <span>Solicitar Cuenta</span>
-                                </button>
-                            </div>
-                        </div>
+                        <StreamingCard key={service.id} service={service} />
                     ))}
                 </div>
 
