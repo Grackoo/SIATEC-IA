@@ -160,16 +160,20 @@ export default function AdminDashboard() {
             }
         }
 
+        specsJson.is_promotion = formData.is_promotion;
+        if (formData.is_promotion) {
+            specsJson.discount_percentage = parseInt(formData.discount_percentage) || 0;
+        }
+
         // Destructuramos los campos temporales del formulario para no enviarlos como columnas directas
-        const { condition, gama, procesador, ram, almacenamiento, display, gpu, os, ...restFormData } = formData;
+        const { condition, gama, procesador, ram, almacenamiento, display, gpu, os, is_promotion, discount_percentage, ...restFormData } = formData;
 
         const productData = {
             ...restFormData,
             price: parseFloat(formData.price),
             stock: parseInt(formData.stock),
             specs: specsJson,
-            image_url: formData.images.length > 0 ? formData.images[0] : null,
-            discount_percentage: formData.is_promotion ? parseInt(formData.discount_percentage) || 0 : null
+            image_url: formData.images.length > 0 ? formData.images[0] : null
         };
 
         try {

@@ -28,6 +28,8 @@ export function ProductsProvider({ children }) {
                     specsRaw: item.specs, // Keep raw specs for tooltip
                     images: item.images && item.images.length > 0 ? item.images : (item.image_url ? [item.image_url] : ['https://via.placeholder.com/400']),
                     category: item.category,
+                    is_promotion: item.specs?.is_promotion || false,
+                    discount_percentage: item.specs?.discount_percentage || null,
                     inStock: item.stock > 0
                 }));
             setProducts(mappedProducts);
@@ -40,8 +42,8 @@ export function ProductsProvider({ children }) {
         // If it's already a string, return it
         if (typeof specs === 'string') return specs;
 
-        // Exclude internal fields like 'condition'
-        const { condition, ...rest } = specs;
+        // Exclude internal fields
+        const { condition, is_promotion, discount_percentage, ...rest } = specs;
 
         // Join values
         return Object.values(rest).join(', ');

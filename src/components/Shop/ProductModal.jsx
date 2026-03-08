@@ -60,7 +60,7 @@ export default function ProductModal({ product, onClose }) {
 
                             {product.specsRaw && typeof product.specsRaw === 'object' ? (
                                 Object.entries(product.specsRaw).map(([key, value]) => {
-                                    if (key === 'condition') return null; // Already handled
+                                    if (key === 'condition' || key === 'is_promotion' || key === 'discount_percentage') return null; // Already handled
                                     return (
                                         <div key={key} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
                                             <span className="text-gray-400 capitalize">{key}</span>
