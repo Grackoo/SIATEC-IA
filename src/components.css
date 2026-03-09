@@ -531,9 +531,11 @@
     z-index: 1;
     /* Para contexto de apilamiento */
     --electric-color: #00fffb;
+    /* Remover overflow: hidden nativo para que el halo exterior pueda publicarse */
+    overflow: visible !important;
 }
 
-/* Asegurar que el contenido quede por encima del brillo */
+/* Asegurar que el contenido quede por encima del brillo (pero por debajo del marco frontal) */
 .product-card>*,
 .license-card>*,
 .service-card>* {
@@ -541,7 +543,7 @@
     z-index: 2;
 }
 
-/* Efecto Electric Border */
+/* Efectos de Brillo Neon - Contenedores Absolutos */
 .product-card::before,
 .product-card::after,
 .license-card::before,
@@ -558,21 +560,56 @@
     border-radius: inherit;
     box-sizing: border-box;
     pointer-events: none;
-    z-index: 0;
-    /* Por detrás del contenido (z-index: 2) */
     animation: electric-flicker 2s infinite alternate ease-in-out;
 }
 
+/* Capa 1 Frontal: Brillo Nítido. Lo enviamos hacia AL FRENTE (z-index 10) 
+   para enmarcar el contenido y tapar subidas de pixeles */
 .product-card::before,
 .license-card::before,
 .service-card::before {
     filter: blur(1px);
+    z-index: 10;
 }
 
+/* Capa 2 Trasera: Resplandor/Halo. Se queda atrás (z-index 0) 
+   para iluminar la zona oscura */
 .product-card::after,
 .license-card::after,
 .service-card::after {
     filter: blur(4px);
+    z-index: 0;
+}
+
+/* === RECORTE DE ESQUINAS (CORNERS CLIP) ===
+   Ya que cortamos overflow:hidden para salvar el halo exterior,
+   debemos redondear a mano los componentes internos para que no sobresalgan 
+   como esquinas rectangulares 
+*/
+.product-image-wrapper,
+.license-image-container,
+.service-header,
+.license-card .license-image,
+.license-card .relative {
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+}
+
+.product-footer .btn-add-cart,
+.license-footer .btn,
+.service-body .btn-whatsapp,
+.product-card> :last-child,
+.license-card> :last-child,
+.service-card> :last-child {
+    border-bottom-left-radius: 11px;
+    border-bottom-right-radius: 11px;
+}
+
+/* Elementos críticos deben flotar más arriba que el marco de neon para no verse opacos */
+.price-overlay,
+.promotion-badge,
+.badge-primary {
+    z-index: 20 !important;
 }
 
 @keyframes electric-flicker {
@@ -1058,7 +1095,6 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    overflow: hidden;
     transition: all var(--transition-base);
     display: flex;
     flex-direction: column;

@@ -4,7 +4,7 @@ import { requestStreamingService } from '../../utils/whatsapp';
 
 export default function StreamingCard({ service }) {
     return (
-        <div className="service-card relative overflow-hidden group">
+        <div className="service-card relative group">
             {/* Promotions Badge */}
             {service.is_promotion && service.discount_percentage && (
                 <div className="promotion-badge">
